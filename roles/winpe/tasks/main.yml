@@ -62,7 +62,7 @@
 - name: copy iso file
   win_copy:
     src: "{{ temp_directory }}\\winpe_amd64_ps.iso"
-    dest: "{{ smb_share }}\\"
+    dest: "{{ smb_share }}\\{{ destination_file_location }}\\"
     remote_src: yes
   become: yes
   become_method: runas

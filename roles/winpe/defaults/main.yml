@@ -2,3 +2,4 @@
 win_adk_download_url: https://go.microsoft.com/fwlink/?linkid=873065
 temp_directory: "{{ ansible_env.TEMP }}"
 smb_share: ''
+destination_file_location: ''
