@@ -10,7 +10,7 @@
 #    chdir: c:\
 #    creates: c:\ADK
 
-- name: install visual c++ package
+- name: install windows adk
   win_package:
     path: "{{ win_adk_download_url }}"
     product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
