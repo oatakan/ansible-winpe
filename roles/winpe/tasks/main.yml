@@ -5,7 +5,7 @@
     arguments: /quiet /installpath c:\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
 
 - name: create a working copy of the windows pe files
-  win_shell: copype amd64 C:\WinPE_amd64_PS
+  win_shell: "..\\Deployment Tools\\DandISetEnv.bat" & copype amd64 C:\WinPE_amd64_PS
   args:
     executable: cmd
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
