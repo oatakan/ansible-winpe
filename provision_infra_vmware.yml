@@ -1,4 +1,5 @@
 - hosts: localhost
+  gather_facts: no
   become: no
   vars_files:
     - config/nodes-vmware.yml

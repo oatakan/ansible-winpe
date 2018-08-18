@@ -1,0 +1,33 @@
+- name: Destroy Windows VMs
+  hosts: all
+  gather_facts: False
+  become: no
+  vars_files:
+    - config/nodes-vmware.yml
+    
+  tasks:
+    - name: poweroff vm
+      vmware_guest:
+        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+        username: "{{ lookup('env', 'VMWARE_USER') }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+        validate_certs: no
+        name: "{{ inventory_hostname }}"
+        uuid: "{{ hostvars[inventory_hostname].config.uuid }}"
+        state: poweredoff
+      delegate_to: 127.0.0.1
+      with_items: "{{ nodes }}"
+      when: (nodes is defined) and (hostvars[inventory_hostname].config.uuid is defined) and (hostvars[inventory_hostname].config.name == item.name)
+
+    - name: delete vm
+      vmware_guest:
+        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+        username: "{{ lookup('env', 'VMWARE_USER') }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+        validate_certs: no
+        name: "{{ inventory_hostname }}"
+        uuid: "{{ hostvars[inventory_hostname].config.uuid }}"
+        state: absent
+      delegate_to: 127.0.0.1
+      with_items: "{{ nodes }}"
+      when: (nodes is defined) and (hostvars[inventory_hostname].config.uuid is defined) and (hostvars[inventory_hostname].config.name == item.name)
