@@ -95,3 +95,13 @@
   vars:
     ansible_become_user: "{{ smb_share_username }}"
     ansible_become_pass: "{{ smb_share_password }}"
+
+- name: clean up files
+  file:
+    path: "{{ temp_directory }}\\{{ item }}"
+    state: absent
+  with_items:
+    - winpeshl.ini
+    - setsysname.cmd
+    - create_winpe.ps1
+    - curl.zip
