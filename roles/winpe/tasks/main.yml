@@ -10,7 +10,6 @@
     dest: "{{ temp_directory }}\\{{ item }}"
   with_items:
     - winpeshl.ini
-    - setsysname.cmd
 
 - name: create files
   win_template:
@@ -18,6 +17,7 @@
     dest: "{{ temp_directory }}\\{{ item }}"
   with_items:
     - init.cmd
+    - setsysname.cmd
 
 - name: download curl
   win_get_url:
