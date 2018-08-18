@@ -22,5 +22,10 @@
       wait_for_connection:
         delay: 10
         timeout: 300
+      vars:
+        ansible_port: 5986
+        ansible_connection: winrm
+        ansible_winrm_transport: credssp
+        ansible_winrm_server_cert_validation: ignore
       delegate_to: "{{ hostvars[item].ansible_host }}"
       with_items: "{{ groups.tag_role_wadk }}"
