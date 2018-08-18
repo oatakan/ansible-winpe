@@ -1,5 +1,6 @@
 ---
 win_adk_download_url: https://go.microsoft.com/fwlink/?linkid=873065
+curl_download_url: https://bintray.com/artifact/download/vszakats/generic/curl-7.61.0-win64-mingw.zip
 temp_directory: "{{ ansible_env.TEMP }}"
 smb_share: ''
 destination_file_location: ''

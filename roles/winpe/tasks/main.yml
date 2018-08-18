@@ -9,6 +9,17 @@
     src: winpeshl.ini
     dest: "{{ temp_directory }}\\winpeshl.ini"
 
+- name: download curl
+  win_get_url:
+    url: "{{ curl_download_url }}"
+    dest: "{{ temp_directory }}\\curl.zip"
+
+- name: unzip curl
+  win_unzip:
+    src: "{{ temp_directory }}\\curl.zip"
+    dest: "{{ temp_directory }}"
+    creates: "{{ temp_directory }}\\curl-7.61.0-win64-mingw"
+
 - name: create a working copy of the windows pe files
   win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & copype amd64 C:\WinPE_amd64_PS'
   args:
