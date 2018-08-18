@@ -1,17 +1,52 @@
-#- name: download windows adk tool
-#  win_get_url:
-#    url: "{{ win_adk_download_url }}"
-#    dest: "{{ temp_directory }}\\adksetup.exe"
-
-#- name: install windows adk
-#  win_shell: "{{ temp_directory }}\\adksetup.exe /quiet /installpath c:\\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment"
-#  args:
-#    executable: cmd
-#    chdir: c:\
-#    creates: c:\ADK
-
 - name: install windows adk
   win_package:
     path: "{{ win_adk_download_url }}"
     product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
     arguments: /quiet /installpath c:\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
+
+- name: create a working copy of the windows pe files
+  win_shell: copype amd64 C:\WinPE_amd64_PS
+  args:
+    executable: cmd
+    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
+    creates: C:\WinPE_amd64_PS
+
+- name: mount windows pe image
+  win_shell: Dism /Mount-Image /ImageFile:"C:\WinPE_amd64_PS\media\sources\boot.wim" /Index:1 /MountDir:"C:\WinPE_amd64_PS\mount"
+  args:
+    executable: cmd
+    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
+    creates: C:\WinPE_amd64_PS\mount\Windows
+
+- name: add packages
+  win_shell: Dism /Add-Package /Image:"C:\WinPE_amd64_PS\mount" /PackagePath:"c:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\WinPE_OCs\{{ item }}"
+  args:
+    executable: cmd
+    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
+  with_items:
+    - WinPE-WMI.cab
+    - en-us\WinPE-WMI_en-us.cab
+    - WinPE-NetFX.cab
+    - en-us\WinPE-NetFX_en-us.cab
+    - WinPE-Scripting.cab
+    - en-us\WinPE-Scripting_en-us.cab
+    - WinPE-PowerShell.cab
+    - en-us\WinPE-PowerShell_en-us.cab
+    - WinPE-StorageWMI.cab
+    - en-us\WinPE-StorageWMI_en-us.cab
+    - WinPE-DismCmdlets.cab
+    - en-us\WinPE-DismCmdlets_en-us.cab
+
+- name: unmount windows pe image
+  win_shell: Dism /Unmount-Image /MountDir:C:\WinPE_amd64_PS\mount /Commit
+  args:
+    executable: cmd
+    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
+    removes: C:\WinPE_amd64_PS\mount\Windows
+
+- name: create winpe iso file
+  win_shell: MakeWinPEMedia /UFD C:\WinPE_amd64_PS "{{ temp_directory }}\\winpe_amd64_ps.iso"
+  args:
+    executable: cmd
+    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
+    creates: "{{ temp_directory }}\\winpe_amd64_ps.iso"
