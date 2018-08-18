@@ -11,4 +11,7 @@ Dism /Add-Package /Image:"C:\WinPE_amd64_PS\mount" /PackagePath:"c:\ADK\Assessme
 Dism /Add-Package /Image:"C:\WinPE_amd64_PS\mount" /PackagePath:"c:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\WinPE_OCs\en-us\WinPE-StorageWMI_en-us.cab"
 Dism /Add-Package /Image:"C:\WinPE_amd64_PS\mount" /PackagePath:"c:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\WinPE_OCs\WinPE-DismCmdlets.cab"
 Dism /Add-Package /Image:"C:\WinPE_amd64_PS\mount" /PackagePath:"c:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\WinPE_OCs\en-us\WinPE-DismCmdlets_en-us.cab"
-#Dism /Unmount-Image /MountDir:C:\WinPE_amd64_PS\mount /Commit
+
+Copy-Item "{{ temp_directory }}\\winpeshl.ini" -Destination "C:\WinPE_amd64_PS\mount\Windows\system32"
+
+Dism /Unmount-Image /MountDir:C:\WinPE_amd64_PS\mount /Commit

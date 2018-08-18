@@ -4,6 +4,11 @@
     product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
     arguments: /quiet /installpath c:\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
 
+- name: copy winpeshl.ini file
+  win_copy:
+    src: winpeshl.ini
+    dest: "{{ temp_directory }}\\winpeshl.ini"
+
 - name: create a working copy of the windows pe files
   win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & copype amd64 C:\WinPE_amd64_PS'
   args:
@@ -37,21 +42,15 @@
 #    - WinPE-DismCmdlets.cab
 #    - en-us\WinPE-DismCmdlets_en-us.cab
 #
-
-- name: copy winpeshl.ini file
-  win_copy:
-    src: winpeshl.ini
-    dest: C:\WinPE_amd64_PS\mount\Windows\system32\winpeshl.ini
-
-- name: unmount windows pe image
-  win_shell: Dism /Unmount-Image /MountDir:C:\WinPE_amd64_PS\mount /Commit
-  args:
-    executable: cmd
-    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-    removes: C:\WinPE_amd64_PS\mount\Windows
+#- name: unmount windows pe image
+#  win_shell: Dism /Unmount-Image /MountDir:C:\WinPE_amd64_PS\mount /Commit
+#  args:
+#    executable: cmd
+#    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
+#    removes: C:\WinPE_amd64_PS\mount\Windows
 
 - name: copy script file
-  win_copy:
+  win_template:
     src: create_winpe.ps1
     dest: "{{ temp_directory }}\\create_winpe.ps1"
 
