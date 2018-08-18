@@ -101,7 +101,6 @@
     path: "{{ temp_directory }}\\{{ item }}"
     state: absent
   with_items:
-    - C:\{{ winpe_name }}
     - winpeshl.ini
     - setsysname.cmd
     - create_winpe.ps1
