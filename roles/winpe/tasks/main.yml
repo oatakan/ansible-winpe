@@ -83,7 +83,6 @@
   args:
     executable: cmd
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-    creates: "{{ temp_directory }}\\{{ winpe_name }}.iso"
 
 - name: copy iso file
   win_copy:
