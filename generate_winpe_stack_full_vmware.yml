@@ -1,13 +1,11 @@
 ---
 - import_playbook: provision_infra_vmware.yml
 
-- import_playbook: generate_winpe.yml
-
 - hosts: localhost
   become: no
   gather_facts: no
-  vars:
-    test: 'testing'
   tasks:
-    - debug:
-        var: test
+    - pause:
+        seconds: 30
+
+- import_playbook: generate_winpe.yml
