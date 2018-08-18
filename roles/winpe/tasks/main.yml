@@ -4,10 +4,20 @@
     product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
     arguments: /quiet /installpath c:\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
 
-- name: copy winpeshl.ini file
+- name: copy files
   win_copy:
-    src: winpeshl.ini
-    dest: "{{ temp_directory }}\\winpeshl.ini"
+    src: "{{ item }}"
+    dest: "{{ temp_directory }}\\{{ item }}"
+  with_items:
+    - winpeshl.ini
+    - setsysname.cmd
+
+- name: create files
+  win_template:
+    src: "{{ item }}"
+    dest: "{{ temp_directory }}\\{{ item }}"
+  with_items:
+    - init.cmd
 
 - name: download curl
   win_get_url:

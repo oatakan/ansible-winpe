@@ -15,4 +15,9 @@ Dism /Add-Package /Image:"C:\WinPE_amd64_PS\mount" /PackagePath:"c:\ADK\Assessme
 Copy-Item "{{ temp_directory }}\\winpeshl.ini" -Destination "C:\WinPE_amd64_PS\mount\Windows\system32"
 Copy-Item "{{ temp_directory }}\\curl-7.61.0-win64-mingw\\bin\*" -Destination "C:\WinPE_amd64_PS\mount\Windows\system32"
 
+md "C:\WinPE_amd64_PS\mount\opt\bootstrap" -ea 0
+
+Copy-Item "{{ temp_directory }}\\init.cmd" -Destination "C:\WinPE_amd64_PS\mount\opt\bootstrap"
+Copy-Item "{{ temp_directory }}\\setsysname.cmd" -Destination "C:\WinPE_amd64_PS\mount\opt\bootstrap"
+
 Dism /Unmount-Image /MountDir:C:\WinPE_amd64_PS\mount /Commit
