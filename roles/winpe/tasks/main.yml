@@ -96,7 +96,7 @@
     ansible_become_user: "{{ smb_share_username }}"
     ansible_become_pass: "{{ smb_share_password }}"
 
-- name: clean up files
+- name: clean up temp files
   win_file:
     path: "{{ temp_directory }}\\{{ item }}"
     state: absent
@@ -106,3 +106,8 @@
     - setsysname.cmd
     - create_winpe.ps1
     - curl.zip
+
+- name: clean winpe files
+  win_file:
+    path: C:\{{ winpe_name }}
+    state: absent
