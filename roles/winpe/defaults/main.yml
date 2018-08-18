@@ -4,7 +4,7 @@ curl_download_url: https://bintray.com/artifact/download/vszakats/generic/curl-7
 temp_directory: "{{ ansible_env.TEMP }}"
 smb_share: ''
 destination_file_location: ''
-winpe_name: winpe_amd64
+winpe_name: winpe_amd64_no_prompt
 cobbler_port: 8080
 enable_script_debug: no
 remove_boot_prompt: yes
