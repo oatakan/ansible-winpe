@@ -17,3 +17,10 @@
       changed_when: no
       tags:
         - addhost
+
+    - name: wait for systems to be available
+      wait_for_connection:
+        delay: 10
+        timeout: 300
+      delegate_to: "{{ hostvars[item].ansible_host }}"
+      with_items: "{{ groups.tag_role_wadk }}"

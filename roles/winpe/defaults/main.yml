@@ -4,3 +4,4 @@ curl_download_url: https://bintray.com/artifact/download/vszakats/generic/curl-7
 temp_directory: "{{ ansible_env.TEMP }}"
 smb_share: ''
 destination_file_location: ''
+winpe_name: winpe_amd64

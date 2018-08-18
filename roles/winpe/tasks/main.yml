@@ -31,21 +31,21 @@
     creates: "{{ temp_directory }}\\curl-7.61.0-win64-mingw"
 
 - name: create a working copy of the windows pe files
-  win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & copype amd64 C:\WinPE_amd64_PS'
+  win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & copype amd64 C:\{{ winpe_name }}'
   args:
     executable: cmd
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-    creates: C:\WinPE_amd64_PS
+    creates: C:\{{ winpe_name }}
 
 #- name: mount windows pe image
-#  win_shell: Dism /Mount-Image /ImageFile:"C:\WinPE_amd64_PS\media\sources\boot.wim" /Index:1 /MountDir:"C:\WinPE_amd64_PS\mount"
+#  win_shell: Dism /Mount-Image /ImageFile:"C:\{{ winpe_name }}\media\sources\boot.wim" /Index:1 /MountDir:"C:\{{ winpe_name }}\mount"
 #  args:
 #    executable: cmd
 #    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-#    creates: C:\WinPE_amd64_PS\mount\Windows
+#    creates: C:\{{ winpe_name }}\mount\Windows
 #
 #- name: add packages
-#  win_shell: Dism /Add-Package /Image:"C:\WinPE_amd64_PS\mount" /PackagePath:"c:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\WinPE_OCs\{{ item }}"
+#  win_shell: Dism /Add-Package /Image:"C:\{{ winpe_name }}\mount" /PackagePath:"c:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\WinPE_OCs\{{ item }}"
 #  args:
 #    executable: cmd
 #    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
@@ -64,11 +64,11 @@
 #    - en-us\WinPE-DismCmdlets_en-us.cab
 #
 #- name: unmount windows pe image
-#  win_shell: Dism /Unmount-Image /MountDir:C:\WinPE_amd64_PS\mount /Commit
+#  win_shell: Dism /Unmount-Image /MountDir:C:\{{ winpe_name }}\mount /Commit
 #  args:
 #    executable: cmd
 #    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-#    removes: C:\WinPE_amd64_PS\mount\Windows
+#    removes: C:\{{ winpe_name }}\mount\Windows
 
 - name: copy script file
   win_template:
@@ -79,15 +79,15 @@
   win_shell: "{{ temp_directory }}\\create_winpe.ps1"
 
 - name: create winpe iso file
-  win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & MakeWinPEMedia /ISO C:\WinPE_amd64_PS {{ temp_directory }}\winpe_amd64_ps.iso'
+  win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & MakeWinPEMedia /ISO C:\{{ winpe_name }} {{ temp_directory }}\{{ winpe_name }}.iso'
   args:
     executable: cmd
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-    creates: "{{ temp_directory }}\\winpe_amd64_ps.iso"
+    creates: "{{ temp_directory }}\\{{ winpe_name }}.iso"
 
 - name: copy iso file
   win_copy:
-    src: "{{ temp_directory }}\\winpe_amd64_ps.iso"
+    src: "{{ temp_directory }}\\{{ winpe_name }}.iso"
     dest: "{{ smb_share }}\\{{ destination_file_location }}\\"
     remote_src: yes
   become: yes
