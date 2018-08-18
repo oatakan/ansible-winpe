@@ -105,6 +105,7 @@
     - setsysname.cmd
     - create_winpe.ps1
     - curl.zip
+    - {{ winpe_name }}.iso
 
 - name: clean winpe files
   win_file:
