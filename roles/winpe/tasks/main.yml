@@ -53,7 +53,7 @@
   win_shell: "{{ temp_directory }}\\create_winpe.ps1"
 
 - name: create winpe iso file
-  win_shell: "'..\Deployment Tools\DandISetEnv.bat' & MakeWinPEMedia /ISO C:\WinPE_amd64_PS {{ temp_directory }}\winpe_amd64_ps.iso"
+  win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & MakeWinPEMedia /ISO C:\WinPE_amd64_PS {{ temp_directory }}\winpe_amd64_ps.iso'
   args:
     executable: cmd
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
