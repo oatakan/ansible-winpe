@@ -6,6 +6,6 @@
   gather_facts: no
   tasks:
     - pause:
-        seconds: 30
+        seconds: 60
 
 - import_playbook: generate_winpe.yml
