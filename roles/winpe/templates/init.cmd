@@ -46,7 +46,7 @@ echo NEXT:call %TEMP%\getks.cmd
 PAUSE
 call %TEMP%\getks.cmd
 
-call NEXT:%TEMP%\runsetup.cmd
+echo NEXT:call %TEMP%\runsetup.cmd
 PAUSE
 call %TEMP%\runsetup.cmd
 PAUSE
