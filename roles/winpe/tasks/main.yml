@@ -37,12 +37,18 @@
 #    - WinPE-DismCmdlets.cab
 #    - en-us\WinPE-DismCmdlets_en-us.cab
 #
-#- name: unmount windows pe image
-#  win_shell: Dism /Unmount-Image /MountDir:C:\WinPE_amd64_PS\mount /Commit
-#  args:
-#    executable: cmd
-#    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-#    removes: C:\WinPE_amd64_PS\mount\Windows
+
+- name: copy winpeshl.ini file
+  win_copy:
+    src: winpeshl.ini
+    dest: C:\WinPE_amd64_PS\mount\Windows\system32\winpeshl.ini
+
+- name: unmount windows pe image
+  win_shell: Dism /Unmount-Image /MountDir:C:\WinPE_amd64_PS\mount /Commit
+  args:
+    executable: cmd
+    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
+    removes: C:\WinPE_amd64_PS\mount\Windows
 
 - name: copy script file
   win_copy:
