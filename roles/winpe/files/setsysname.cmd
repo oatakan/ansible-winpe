@@ -10,4 +10,4 @@ PAUSE
 for /f "tokens=1-6 delims=- " %%a in ('echo %COBBLER_MAC%')                               do set COBBLER_MAC=%%a:%%b:%%c:%%d:%%e:%%f
 
 PAUSE
-for /f "delims= " %%S in ('curl -s http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/autodetect/HTTP_X_RHN_PROVISIONING_MAC_0/eth0%20%COBBLER_MAC%') do set COBBLER_SYSNAME=%%S
+for /f "delims= " %%S in ('curl -s -H "X-RHN-Provisioning-MAC-0: eth0 %COBBLER_MAC%" http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/autodetect') do set COBBLER_SYSNAME=%%S
