@@ -7,3 +7,4 @@ destination_file_location: ''
 winpe_name: winpe_amd64
 cobbler_port: 8080
 enable_script_debug: no
+remove_boot_prompt: yes

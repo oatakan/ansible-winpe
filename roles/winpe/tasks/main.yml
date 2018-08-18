@@ -37,38 +37,11 @@
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
     creates: C:\{{ winpe_name }}
 
-#- name: mount windows pe image
-#  win_shell: Dism /Mount-Image /ImageFile:"C:\{{ winpe_name }}\media\sources\boot.wim" /Index:1 /MountDir:"C:\{{ winpe_name }}\mount"
-#  args:
-#    executable: cmd
-#    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-#    creates: C:\{{ winpe_name }}\mount\Windows
-#
-#- name: add packages
-#  win_shell: Dism /Add-Package /Image:"C:\{{ winpe_name }}\mount" /PackagePath:"c:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\WinPE_OCs\{{ item }}"
-#  args:
-#    executable: cmd
-#    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-#  with_items:
-#    - WinPE-WMI.cab
-#    - en-us\WinPE-WMI_en-us.cab
-#    - WinPE-NetFX.cab
-#    - en-us\WinPE-NetFX_en-us.cab
-#    - WinPE-Scripting.cab
-#    - en-us\WinPE-Scripting_en-us.cab
-#    - WinPE-PowerShell.cab
-#    - en-us\WinPE-PowerShell_en-us.cab
-#    - WinPE-StorageWMI.cab
-#    - en-us\WinPE-StorageWMI_en-us.cab
-#    - WinPE-DismCmdlets.cab
-#    - en-us\WinPE-DismCmdlets_en-us.cab
-#
-#- name: unmount windows pe image
-#  win_shell: Dism /Unmount-Image /MountDir:C:\{{ winpe_name }}\mount /Commit
-#  args:
-#    executable: cmd
-#    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
-#    removes: C:\{{ winpe_name }}\mount\Windows
+- name: remove boot prompt
+  file:
+    path: C:\{{ winpe_name }}\media\Boot\Bootfix.bin
+    state: absent
+  when: remove_boot_prompt
 
 - name: copy script file
   win_template:
