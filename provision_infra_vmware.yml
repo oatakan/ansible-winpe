@@ -1,0 +1,18 @@
+- hosts: localhost
+  become: no
+  vars_files:
+    - config/nodes-vmware.yml
+  roles:
+    - ansible-role-vmware
+
+  post_tasks:
+    - name: add hosts to winpe group
+      add_host:
+        name: "{{ item.invocation.module_args.name }}"
+        ansible_host: "{{ item.invocation.module_args.networks[0].ip }}"
+        groups: tag_role_wadk,tag_app_winpe
+      with_items: "{{ instances.results }}"
+      when: ('win10waik' in item.invocation.module_args.name)
+      changed_when: no
+      tags:
+        - addhost

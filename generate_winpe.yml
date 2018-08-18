@@ -1,0 +1,12 @@
+- name: generate_winpe
+  hosts: tag_role_wadk:&tag_app_winpe
+  become_method: runas
+  vars:
+    ansible_port: 5986
+    ansible_connection: winrm
+    ansible_winrm_transport: credssp
+    ansible_winrm_server_cert_validation: ignore
+
+
+  roles:
+    - winpe

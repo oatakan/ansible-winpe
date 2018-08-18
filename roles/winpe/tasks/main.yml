@@ -1,0 +1,11 @@
+- name: download windows adk tool
+  win_get_url:
+    url: "{{ win_adk_download_url }}"
+    dest: "{{ temp_directory }}\\adksetup.exe"
+
+- name: install windows adk
+  win_shell: "{{ temp_directory }}\\adksetup.exe /quiet /installpath c:\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment"
+  args:
+    executable: cmd
+    chdir: c:\
+    creates: c:\ADK
