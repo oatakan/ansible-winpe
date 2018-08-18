@@ -97,7 +97,7 @@
     ansible_become_pass: "{{ smb_share_password }}"
 
 - name: clean up files
-  file:
+  win_file:
     path: "{{ temp_directory }}\\{{ item }}"
     state: absent
   with_items:
