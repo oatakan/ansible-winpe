@@ -38,7 +38,7 @@
     creates: C:\{{ winpe_name }}
 
 - name: remove boot prompt
-  file:
+  win_file:
     path: C:\{{ winpe_name }}\media\Boot\Bootfix.bin
     state: absent
   when: remove_boot_prompt
