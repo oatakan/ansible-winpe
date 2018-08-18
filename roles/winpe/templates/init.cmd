@@ -1,7 +1,8 @@
 @echo off
 
 
-set COBBLER_SERV="{{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}"
+set COBBLER_SERV={{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}
+set COBBLER_PORT={{ cobbler_port }}
 
 
 rem -------------------------------------------------------------------
@@ -18,19 +19,19 @@ rem fetch install script
 rem -------------------------------------------------------------------
 
 echo "get the remainder of the init scripts"
-echo NEXT: curl -s -o %TEMP%/mountmedia.cmd http://%COBBLER_SERV%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=mountmedia.cmd
+echo NEXT: curl -s -o %TEMP%/mountmedia.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=mountmedia.cmd
 PAUSE
-curl -s -o %TEMP%/mountmedia.cmd http://%COBBLER_SERV%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=mountmedia.cmd
+curl -s -o %TEMP%/mountmedia.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=mountmedia.cmd
 
 
-echo NEXT: curl -s -o %TEMP%/getks.cmd http://%COBBLER_SERV%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=getks.cmd
+echo NEXT: curl -s -o %TEMP%/getks.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=getks.cmd
 PAUSE
-curl -s -o %TEMP%/getks.cmd http://%COBBLER_SERV%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=getks.cmd
+curl -s -o %TEMP%/getks.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=getks.cmd
 
 
-echo NEXT: curl -s -o %TEMP%/runsetup.cmd http://%COBBLER_SERV%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=runsetup.cmd
+echo NEXT: curl -s -o %TEMP%/runsetup.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=runsetup.cmd
 PAUSE
-curl -s -o %TEMP%/runsetup.cmd http://%COBBLER_SERV%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=runsetup.cmd
+curl -s -o %TEMP%/runsetup.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=runsetup.cmd
 
 
 rem -------------------------------------------------------------------

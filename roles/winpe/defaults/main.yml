@@ -5,3 +5,4 @@ temp_directory: "{{ ansible_env.TEMP }}"
 smb_share: ''
 destination_file_location: ''
 winpe_name: winpe_amd64
+cobbler_port: 8080
