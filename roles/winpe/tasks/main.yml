@@ -4,7 +4,7 @@
     dest: "{{ temp_directory }}\\adksetup.exe"
 
 - name: install windows adk
-  win_shell: "{{ temp_directory }}\\adksetup.exe /quiet /installpath c:\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment"
+  win_shell: "{{ temp_directory }}\\adksetup.exe /quiet /installpath c:\\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment"
   args:
     executable: cmd
     chdir: c:\
