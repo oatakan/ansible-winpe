@@ -4,6 +4,11 @@
     winpe_name: "{{ winpe_name }}_ps"
   when: enable_powershell_modules
 
+- name: set winpe_name with debug
+  set_fact:
+    winpe_name: "{{ winpe_name }}_debug"
+  when: enable_script_debug
+
 - name: install windows adk
   win_package:
     path: "{{ win_adk_download_url }}"
