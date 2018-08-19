@@ -12,6 +12,8 @@ echo set COBBLER_SYSTEMNAME
 echo NEXT: %SYSTEMDRIVE%\opt\bootstrap\setsysname.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 call %SYSTEMDRIVE%\opt\bootstrap\setsysname.cmd
 
@@ -24,6 +26,8 @@ echo "get the remainder of the init scripts"
 echo NEXT: curl -s -o %TEMP%/mountmedia.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=mountmedia.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 curl -s -o %TEMP%/mountmedia.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=mountmedia.cmd
 
@@ -31,6 +35,8 @@ curl -s -o %TEMP%/mountmedia.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/o
 echo NEXT: curl -s -o %TEMP%/getks.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=getks.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 curl -s -o %TEMP%/getks.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=getks.cmd
 
@@ -38,12 +44,16 @@ curl -s -o %TEMP%/getks.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/scr
 echo NEXT: curl -s -o %TEMP%/runsetup.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=runsetup.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 curl -s -o %TEMP%/runsetup.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=runsetup.cmd
 
 echo NEXT: curl -s -o %TEMP%/runsetup.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=setupcomplete.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 curl -s -o %TEMP%/setupcomplete.cmd http://%COBBLER_SERV%:%COBBLER_PORT%/cblr/svc/op/script/system/%COBBLER_SYSNAME%/?script=setupcomplete.cmd
 
@@ -55,34 +65,48 @@ rem -------------------------------------------------------------------
 echo NEXT:call %TEMP%\mountmedia.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 call %TEMP%\mountmedia.cmd
 
 echo NEXT:call %TEMP%\getks.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 call %TEMP%\getks.cmd
 
 echo NEXT:call %TEMP%\runsetup.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 call %TEMP%\runsetup.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 
 echo NEXT:call %TEMP%\setupcomplete.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 call %TEMP%\setupcomplete.cmd
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
 
 echo FINISH to SETUP
 {% if enable_script_debug %}
 PAUSE
+{% else %}
+timeout /t 2 /nobreak > NUL
 {% endif %}
