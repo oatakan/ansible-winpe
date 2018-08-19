@@ -1,3 +1,9 @@
+---
+- name: set winpe_name
+  set_fact:
+    winpe_name: "{{ winpe_name }}_ps"
+  when: enable_powershell_modules
+
 - name: install windows adk
   win_package:
     path: "{{ win_adk_download_url }}"
@@ -37,12 +43,6 @@
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
     creates: C:\{{ winpe_name }}
 
-- name: remove boot prompt
-  win_file:
-    path: C:\{{ winpe_name }}\media\Boot\Bootfix.bin
-    state: absent
-  when: remove_boot_prompt
-
 - name: copy script file
   win_template:
     src: create_winpe.ps1
@@ -57,9 +57,32 @@
     executable: cmd
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
 
-- name: copy iso file
+- name: copy winpe iso file
   win_copy:
     src: "{{ temp_directory }}\\{{ winpe_name }}.iso"
+    dest: "{{ smb_share }}\\{{ destination_file_location }}\\"
+    remote_src: yes
+  become: yes
+  become_method: runas
+  become_flags: logon_type=new_credentials logon_flags=netcredentials_only
+  vars:
+    ansible_become_user: "{{ smb_share_username }}"
+    ansible_become_pass: "{{ smb_share_password }}"
+
+- name: remove boot prompt
+  win_file:
+    path: C:\{{ winpe_name }}\media\Boot\Bootfix.bin
+    state: absent
+
+- name: create winpe no prompt iso file
+  win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & MakeWinPEMedia /ISO C:\{{ winpe_name }} {{ temp_directory }}\{{ winpe_name }}_no_prompt.iso'
+  args:
+    executable: cmd
+    chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
+
+- name: copy winpe no prompt iso file
+  win_copy:
+    src: "{{ temp_directory }}\\{{ winpe_name }}_no_prompt.iso"
     dest: "{{ smb_share }}\\{{ destination_file_location }}\\"
     remote_src: yes
   become: yes
