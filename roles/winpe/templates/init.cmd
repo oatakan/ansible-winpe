@@ -64,20 +64,20 @@ PAUSE
 {% endif %}
 call %TEMP%\getks.cmd
 
-echo NEXT:call %TEMP%\setupcomplete.cmd
-{% if enable_script_debug %}
-PAUSE
-{% endif %}
-call %TEMP%\setupcomplete.cmd
-{% if enable_script_debug %}
-PAUSE
-{% endif %}
-
 echo NEXT:call %TEMP%\runsetup.cmd
 {% if enable_script_debug %}
 PAUSE
 {% endif %}
 call %TEMP%\runsetup.cmd
+{% if enable_script_debug %}
+PAUSE
+{% endif %}
+
+echo NEXT:call %TEMP%\setupcomplete.cmd
+{% if enable_script_debug %}
+PAUSE
+{% endif %}
+call %TEMP%\setupcomplete.cmd
 {% if enable_script_debug %}
 PAUSE
 {% endif %}
