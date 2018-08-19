@@ -10,12 +10,11 @@
     product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
     arguments: /quiet /installpath c:\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
 
-- name: copy files
+- name: copy winpeshl.ini file
   win_copy:
-    src: "{{ item }}"
-    dest: "{{ temp_directory }}\\{{ item }}"
-  with_items:
-    - winpeshl.ini
+    src: winpeshl.ini
+    dest: "{{ temp_directory }}\\winpeshl.ini"
+  when: enable_autostart
 
 - name: create files
   win_template:
@@ -48,7 +47,7 @@
     src: create_winpe.ps1
     dest: "{{ temp_directory }}\\create_winpe.ps1"
 
-- name: load powershell modules into winpe
+- name: copy files and modules into winpe
   win_shell: "{{ temp_directory }}\\create_winpe.ps1"
 
 - name: create winpe iso file

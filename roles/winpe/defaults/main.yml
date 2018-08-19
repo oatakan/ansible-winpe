@@ -8,3 +8,4 @@ winpe_name: winpe_amd64
 cobbler_port: 8080
 enable_script_debug: no
 enable_powershell_modules: no
+enable_autostart: yes
