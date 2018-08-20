@@ -77,7 +77,7 @@ PAUSE
 timeout /t 2 /nobreak > NUL
 {% endif %}
 call %TEMP%\getks.cmd
-
+PAUSE
 echo NEXT:call %TEMP%\runsetup.cmd
 {% if enable_script_debug %}
 PAUSE
@@ -90,7 +90,7 @@ PAUSE
 {% else %}
 timeout /t 2 /nobreak > NUL
 {% endif %}
-
+PAUSE
 echo NEXT:call %TEMP%\setupcomplete.cmd
 {% if enable_script_debug %}
 PAUSE
