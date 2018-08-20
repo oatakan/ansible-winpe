@@ -1,8 +1,5 @@
 @echo off
 
-echo "waiting for 20 seconds"
-timeout /t 20 /nobreak > NUL
-
 set COBBLER_SERV={{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}
 set COBBLER_PORT={{ cobbler_port }}
 
@@ -84,9 +81,11 @@ echo NEXT:call %TEMP%\runsetup.cmd
 {% if enable_script_debug %}
 PAUSE
 {% else %}
-timeout /t 2 /nobreak > NUL
+echo waiting for 30 seconds before installing Windows, close this window if you want to cancel
+timeout /t 30 /nobreak > NUL
 {% endif %}
 call %TEMP%\runsetup.cmd
+if %ERRORLEVEL% != 0 exit
 {% if enable_script_debug %}
 PAUSE
 {% else %}
