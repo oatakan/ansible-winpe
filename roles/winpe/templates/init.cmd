@@ -1,5 +1,7 @@
 @echo off
 
+SETLOCAL EnableDelayedExpansion
+
 set COBBLER_SERV={{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}
 set COBBLER_PORT={{ cobbler_port }}
 
@@ -68,7 +70,7 @@ PAUSE
 timeout /t 2 /nobreak > NUL
 {% endif %}
 call %TEMP%\mountmedia.cmd
-if %ERRORLEVEL% != 0 exit
+if !ERRORLEVEL! NEQ 0 exit
 
 echo NEXT:call %TEMP%\getks.cmd
 {% if enable_script_debug %}
