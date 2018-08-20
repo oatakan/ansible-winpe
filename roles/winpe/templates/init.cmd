@@ -84,7 +84,7 @@ PAUSE
 echo waiting for 30 seconds before installing Windows, close this window if you want to cancel
 timeout /t 30 /nobreak > NUL
 {% endif %}
-call %TEMP%\runsetup.cmd
+start /wait %TEMP%\runsetup.cmd
 if %ERRORLEVEL% != 0 exit
 {% if enable_script_debug %}
 PAUSE
