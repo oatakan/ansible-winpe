@@ -67,7 +67,7 @@ PAUSE
 {% else %}
 timeout /t 2 /nobreak > NUL
 {% endif %}
-start /wait %TEMP%\mountmedia.cmd
+call %TEMP%\mountmedia.cmd
 if %ERRORLEVEL% != 0 exit
 
 echo NEXT:call %TEMP%\getks.cmd
