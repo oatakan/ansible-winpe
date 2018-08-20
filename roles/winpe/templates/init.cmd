@@ -1,5 +1,8 @@
 @echo off
 
+echo "waiting for 20 seconds"
+timeout /t 20 /nobreak > NUL
+
 set COBBLER_SERV={{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}
 set COBBLER_PORT={{ cobbler_port }}
 
