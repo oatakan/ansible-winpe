@@ -106,6 +106,7 @@
     - create_winpe.ps1
     - curl.zip
     - "{{ winpe_name }}.iso"
+    - "{{ winpe_name }}_no_prompt.iso"
 
 - name: clean winpe files
   win_file:
