@@ -67,7 +67,8 @@ PAUSE
 {% else %}
 timeout /t 2 /nobreak > NUL
 {% endif %}
-call %TEMP%\mountmedia.cmd
+start /wait %TEMP%\mountmedia.cmd
+if %ERRORLEVEL% != 0 exit
 
 echo NEXT:call %TEMP%\getks.cmd
 {% if enable_script_debug %}
@@ -84,8 +85,7 @@ PAUSE
 echo waiting for 30 seconds before installing Windows, close this window if you want to cancel
 timeout /t 30 /nobreak > NUL
 {% endif %}
-start /wait %TEMP%\runsetup.cmd
-if %ERRORLEVEL% != 0 exit
+call %TEMP%\runsetup.cmd
 {% if enable_script_debug %}
 PAUSE
 {% else %}
