@@ -114,3 +114,4 @@ PAUSE
 {% else %}
 timeout /t 2 /nobreak > NUL
 {% endif %}
+exit
