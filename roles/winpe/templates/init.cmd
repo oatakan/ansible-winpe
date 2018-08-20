@@ -1,5 +1,7 @@
 @echo off
 
+echo "waiting for 20 seconds"
+timeout /t 20 /nobreak > NUL
 
 set COBBLER_SERV={{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}
 set COBBLER_PORT={{ cobbler_port }}
@@ -77,7 +79,7 @@ PAUSE
 timeout /t 2 /nobreak > NUL
 {% endif %}
 call %TEMP%\getks.cmd
-PAUSE
+
 echo NEXT:call %TEMP%\runsetup.cmd
 {% if enable_script_debug %}
 PAUSE
@@ -90,7 +92,7 @@ PAUSE
 {% else %}
 timeout /t 2 /nobreak > NUL
 {% endif %}
-PAUSE
+
 echo NEXT:call %TEMP%\setupcomplete.cmd
 {% if enable_script_debug %}
 PAUSE
