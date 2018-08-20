@@ -1,7 +1,11 @@
 @echo off
 
 echo "waiting for 20 seconds"
-timeout /t 20 /nobreak > NUL
+set "delay=20" seconds
+set /a delay+=1
+echo wsh.sleep %delay%*1000>sleep.vbs
+cscript //nologo sleep.vbs
+del sleep.vbs
 
 set COBBLER_SERV={{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}
 set COBBLER_PORT={{ cobbler_port }}
