@@ -23,4 +23,6 @@ md "C:\{{ winpe_name }}\mount\opt\bootstrap" -ea 0
 Copy-Item "{{ temp_directory }}\\init.cmd" -Destination "C:\{{ winpe_name }}\mount\opt\bootstrap"
 Copy-Item "{{ temp_directory }}\\setsysname.cmd" -Destination "C:\{{ winpe_name }}\mount\opt\bootstrap"
 
+Copy-Item C:\Windows\System32\timeout.exe -Destination "C:\{{ winpe_name }}\mount\Windows\system32"
+
 Dism /Unmount-Image /MountDir:C:\{{ winpe_name }}\mount /Commit
