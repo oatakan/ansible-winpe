@@ -5,9 +5,13 @@
     dest: "{{ temp_directory }}\\{{ item.url | urlsplit('path') | basename }}"
   with_items: "{{ drivers }}"
 
+#- name: extract drivers
+#  win_unzip:
+#    src: "{{ temp_directory }}\\{{ item.url | urlsplit('path') | basename }}"
+#    dest: "{{ temp_directory }}\\{{ item.name }}"
+#    recurse: yes
+#  with_items: "{{ drivers }}"
+
 - name: extract drivers
-  win_unzip:
-    src: "{{ temp_directory }}\\{{ item.url | urlsplit('path') | basename }}"
-    dest: "{{ temp_directory }}\\{{ item.name }}"
-    recurse: yes
+  win_shell: "'c:\Program Files\7-Zip\7z.exe' x -y {{ temp_directory }}\\{{ item.url | urlsplit('path') | basename }} -o{{ temp_directory }}\\{{ item.name }}"
   with_items: "{{ drivers }}"

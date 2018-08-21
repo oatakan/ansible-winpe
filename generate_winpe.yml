@@ -15,5 +15,10 @@
         state: present
         allow_clobber: yes
 
+    - name: install 7-zip
+      win_chocolatey:
+        name: 7zip.install
+        state: present
+
   roles:
     - winpe
