@@ -6,8 +6,8 @@ smb_share: ''
 destination_file_location: ''
 
 drivers:
-  - name: dell_1707_wireless
-    url: https://downloads.dell.com/FOLDER03935903M/1/Network_Driver_MK1YH_WN32_10.0.0.345_A06.EXE
+  - name: apple_usb_ethernet
+    url: http://kom.aau.dk/~pmr/www/stuff/AsixSetup64.zip
     enable: yes
 
 unzip_executable: c:\Progra~1\7-Zip\7z.exe
