@@ -29,8 +29,8 @@ Copy-Item C:\Windows\System32\timeout.exe -Destination "C:\{{ winpe_name }}\moun
 md "C:\\{{ winpe_name }}\\mount\\drivers" -ea 0
 # Load drivers
 {% for driver in drivers %}
+Move-Item -Path "C:\\{{ temp_directory }}\\{{ driver.name }}" -Destination "C:\\{{ winpe_name }}\\mount\\drivers"
 Dism /Image:"C:\{{ winpe_name }}\mount" /Add-Driver /Driver:"C:\\{{ winpe_name }}\\mount\\drivers\\{{ driver.name }}" /Recurse
-Move-Item -Path "C:\\{{ winpe_name }}\\mount\\drivers\\{{ driver.name }}" -Destination "C:\\{{ winpe_name }}\\mount\\drivers"
 {% endfor %}
 {% endif %}
 
