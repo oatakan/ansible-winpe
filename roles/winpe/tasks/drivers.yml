@@ -8,7 +8,7 @@
 - name: create drivers directory
   win_file:
     path: C:\{{ winpe_name }}\mount\drivers
-    state: present
+    state: directory
 
 - name: extract drivers
   win_unzip:
