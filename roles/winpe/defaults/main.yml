@@ -10,7 +10,7 @@ drivers:
     url: https://downloads.dell.com/FOLDER03935903M/1/Network_Driver_MK1YH_WN32_10.0.0.345_A06.EXE
     enable: yes
 
-7zip_executable: c:\Program Files\7-Zip\7z.exe
+unzip_executable: c:\Program Files\7-Zip\7z.exe
 
 winpe_name: winpe_amd64
 cobbler_port: 8080

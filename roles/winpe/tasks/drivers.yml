@@ -13,5 +13,5 @@
 #  with_items: "{{ drivers }}"
 
 - name: extract drivers
-  win_shell: '{{ 7zip_executable }} x -y {{ temp_directory }}\{{ item.url | urlsplit("path") | basename }} -o{{ temp_directory }}\{{ item.name }}'
+  win_shell: '{{ unzip_executable }} x -y {{ temp_directory }}\{{ item.url | urlsplit("path") | basename }} -o{{ temp_directory }}\{{ item.name }}'
   with_items: "{{ drivers }}"
