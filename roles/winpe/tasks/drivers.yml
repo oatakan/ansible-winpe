@@ -1,0 +1,11 @@
+---
+- name: download drivers
+  win_get_url:
+    url: "{{ item.url }}"
+    dest: "{{ temp_directory }}\\{{ item.url | urlsplit('path') | basename }}"
+  with_items: "{{ drivers }}"
+
+- name: extract drivers
+  win_unzip:
+    src: "{{ temp_directory }}\\{{ item.url | urlsplit('path') | basename }}"
+    dest: "{{ temp_directory }}\\{{ item.name }}"

@@ -4,8 +4,15 @@ curl_download_url: https://bintray.com/artifact/download/vszakats/generic/curl-7
 temp_directory: "{{ ansible_env.TEMP }}"
 smb_share: ''
 destination_file_location: ''
+
+drivers:
+  - name: dell_1707_wireless
+    url: https://downloads.dell.com/FOLDER03935903M/1/Network_Driver_MK1YH_WN32_10.0.0.345_A06.EXE
+    enable: yes
+
 winpe_name: winpe_amd64
 cobbler_port: 8080
 enable_script_debug: no
 enable_powershell_modules: no
 enable_autostart: yes
+load_drivers: yes

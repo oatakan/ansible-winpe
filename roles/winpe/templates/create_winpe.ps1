@@ -25,4 +25,11 @@ Copy-Item "{{ temp_directory }}\\setsysname.cmd" -Destination "C:\{{ winpe_name 
 
 Copy-Item C:\Windows\System32\timeout.exe -Destination "C:\{{ winpe_name }}\mount\Windows\system32"
 
+{% if load_drivers %}
+# Load drivers
+{% for driver in drivers %}
+Dism /Image:"C:\{{ winpe_name }}\mount" /Add-Driver /Driver:"{{ temp_directory }}\\{{ driver.name }}" /Recurse
+{% endfor %}
+{% endif %}
+
 Dism /Unmount-Image /MountDir:C:\{{ winpe_name }}\mount /Commit

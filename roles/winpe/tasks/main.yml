@@ -40,6 +40,10 @@
     dest: "{{ temp_directory }}"
     creates: "{{ temp_directory }}\\curl-7.61.0-win64-mingw"
 
+- name: load drivers
+  include_tasks: drivers.yml
+  when: load_drivers
+
 - name: create a working copy of the windows pe files
   win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & copype amd64 C:\{{ winpe_name }}'
   args:
