@@ -8,5 +8,12 @@
     ansible_winrm_transport: credssp
     ansible_winrm_server_cert_validation: ignore
 
+  - pre_tasks:
+    - name: add pcsx module
+      win_psmodule:
+        name: Pscx
+        state: present
+        allow_clobber: yes
+
   roles:
     - winpe
