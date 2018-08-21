@@ -28,7 +28,7 @@ Copy-Item C:\Windows\System32\timeout.exe -Destination "C:\{{ winpe_name }}\moun
 {% if load_drivers %}
 # Load drivers
 {% for driver in drivers %}
-Dism /Image:"C:\{{ winpe_name }}\mount" /Add-Driver /Driver:"{{ temp_directory }}\\{{ driver.name }}" /Recurse
+Dism /Image:"C:\{{ winpe_name }}\mount" /Add-Driver /Driver:"C:\\{{ winpe_name }}\\mount\\drivers\\{{ driver.name }}" /Recurse
 {% endfor %}
 {% endif %}
 
