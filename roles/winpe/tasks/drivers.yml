@@ -9,3 +9,4 @@
   win_unzip:
     src: "{{ temp_directory }}\\{{ item.url | urlsplit('path') | basename }}"
     dest: "{{ temp_directory }}\\{{ item.name }}"
+  with_items: "{{ drivers }}"
