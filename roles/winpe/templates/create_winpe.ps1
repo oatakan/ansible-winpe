@@ -30,7 +30,7 @@ md "C:\\{{ winpe_name }}\\mount\\drivers" -ea 0
 # Load drivers
 {% for driver in drivers %}
 Dism /Image:"C:\{{ winpe_name }}\mount" /Add-Driver /Driver:"C:\\{{ temp_directory }}\\{{ driver.name }}" /Recurse
-Move-Item -Path "C:\\{{ temp_directory }}\\{{ driver.name }}" -Destination "C:\\{{ winpe_name }}\\mount\\drivers"
+Copy-Item "C:\\{{ temp_directory }}\\{{ driver.name }}" -Destination "C:\\{{ winpe_name }}\\mount\\drivers" -Recurse
 {% endfor %}
 {% endif %}
 

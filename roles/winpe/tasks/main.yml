@@ -106,6 +106,7 @@
     state: absent
   with_items:
     - winpeshl.ini
+    - init.cmd
     - setsysname.cmd
     - create_winpe.ps1
     - curl.zip
