@@ -19,7 +19,7 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: windows-10
+    template: windows-10-1809
     snapshot_src: Linked
     linked_clone: True
     customization:
