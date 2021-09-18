@@ -1,48 +1,48 @@
 ---
+- debug:
+    msg: "{{ os_level }}"
+
 - name: set winpe_name
   set_fact:
-    winpe_name: "{{ winpe_name }}_ps"
+    winpe_name: '{{ winpe_name }}_ps'
   when: enable_powershell_modules
 
 - name: set winpe_name with debug
   set_fact:
-    winpe_name: "{{ winpe_name }}_debug"
+    winpe_name: '{{ winpe_name }}_debug'
   when: enable_script_debug
 
-- name: install windows adk
-  win_package:
-    path: "{{ win_adk_download_url }}"
-    product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
-    arguments: /quiet /installpath c:\ADK /features OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
+- name: install adk
+  include_tasks: "{{ os_product_type }}.yml"
 
 - name: copy winpeshl.ini file
   win_copy:
     src: winpeshl.ini
-    dest: "{{ temp_directory }}\\winpeshl.ini"
-  when: enable_autostart
+    dest: '{{ temp_directory }}\winpeshl.ini'
+  when: enable_autostart|bool
 
 - name: create files
   win_template:
-    src: "{{ item }}"
-    dest: "{{ temp_directory }}\\{{ item }}"
-  with_items:
+    src: '{{ item }}'
+    dest: '{{ temp_directory }}\{{ item }}'
+  loop:
     - init.cmd
     - setsysname.cmd
 
 - name: download curl
   win_get_url:
-    url: "{{ curl_download_url }}"
-    dest: "{{ temp_directory }}\\curl.zip"
+    url: '{{ curl_download_url }}'
+    dest: '{{ temp_directory }}\curl.zip'
 
 - name: unzip curl
   win_unzip:
-    src: "{{ temp_directory }}\\curl.zip"
-    dest: "{{ temp_directory }}"
-    creates: "{{ temp_directory }}\\curl-7.61.0-win64-mingw"
+    src: '{{ temp_directory }}\curl.zip'
+    dest: '{{ temp_directory }}'
+    creates: '{{ temp_directory }}\{{ curl_directory }}'
 
 - name: load drivers
   include_tasks: drivers.yml
-  when: load_drivers
+  when: load_drivers|bool
 
 - name: create a working copy of the windows pe files
   win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & copype amd64 C:\{{ winpe_name }}'
@@ -54,10 +54,10 @@
 - name: copy script file
   win_template:
     src: create_winpe.ps1
-    dest: "{{ temp_directory }}\\create_winpe.ps1"
+    dest: '{{ temp_directory }}\create_winpe.ps1'
 
 - name: copy files and modules into winpe
-  win_shell: "{{ temp_directory }}\\create_winpe.ps1"
+  win_shell: '{{ temp_directory }}\create_winpe.ps1'
 
 - name: create winpe iso file
   win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & MakeWinPEMedia /ISO C:\{{ winpe_name }} {{ temp_directory }}\{{ winpe_name }}.iso'
@@ -67,15 +67,15 @@
 
 - name: copy winpe iso file
   win_copy:
-    src: "{{ temp_directory }}\\{{ winpe_name }}.iso"
-    dest: "{{ smb_share }}\\{{ destination_file_location }}\\"
+    src: '{{ temp_directory }}\{{ winpe_name }}.iso'
+    dest: '{{ smb_share }}\{{ destination_file_location }}\'
     remote_src: yes
   become: yes
   become_method: runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   vars:
-    ansible_become_user: "{{ smb_share_username }}"
-    ansible_become_pass: "{{ smb_share_password }}"
+    ansible_become_user: '{{ smb_share_username }}'
+    ansible_become_pass: '{{ smb_share_password }}'
 
 - name: remove boot prompt
   win_file:
@@ -90,28 +90,29 @@
 
 - name: copy winpe no prompt iso file
   win_copy:
-    src: "{{ temp_directory }}\\{{ winpe_name }}_no_prompt.iso"
-    dest: "{{ smb_share }}\\{{ destination_file_location }}\\"
+    src: '{{ temp_directory }}\{{ winpe_name }}_no_prompt.iso'
+    dest: '{{ smb_share }}\{{ destination_file_location }}\'
     remote_src: yes
   become: yes
   become_method: runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   vars:
-    ansible_become_user: "{{ smb_share_username }}"
-    ansible_become_pass: "{{ smb_share_password }}"
+    ansible_become_user: '{{ smb_share_username }}'
+    ansible_become_pass: '{{ smb_share_password }}'
 
 - name: clean up temp files
   win_file:
-    path: "{{ temp_directory }}\\{{ item }}"
+    path: '{{ temp_directory }}\{{ item }}'
     state: absent
-  with_items:
+  loop:
     - winpeshl.ini
     - init.cmd
     - setsysname.cmd
     - create_winpe.ps1
     - curl.zip
-    - "{{ winpe_name }}.iso"
-    - "{{ winpe_name }}_no_prompt.iso"
+    - '{{ curl_directory }}'
+    - '{{ winpe_name }}.iso'
+    - '{{ winpe_name }}_no_prompt.iso'
 
 - name: clean winpe files
   win_file:

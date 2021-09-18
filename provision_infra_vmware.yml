@@ -2,17 +2,18 @@
   gather_facts: no
   become: no
   vars_files:
-    - config/nodes-vmware.yml
+    - node-config/node-vmware.yml
   roles:
     - ansible-role-vmware
 
   post_tasks:
     - name: add hosts to winpe group
       add_host:
-        name: "{{ item.invocation.module_args.name }}"
-        ansible_host: "{{ item.invocation.module_args.networks[0].ip }}"
+        name: "{{ item.item.name }}"
+        ansible_host: "{{ item.item.networks[0].ip | default(item.instance.guest.ipAddress) }}"
+        ansible_port: "{{ item.item.ansible_port | default(ansible_port) | default('5986') }}"
         groups: tag_role_wadk,tag_app_winpe
-      with_items: "{{ instances.results }}"
+      loop: "{{ guest_ip_address.results }}"
       when: ('win10waik' in item.invocation.module_args.name)
       changed_when: no
       tags:
@@ -28,4 +29,4 @@
         ansible_winrm_transport: credssp
         ansible_winrm_server_cert_validation: ignore
       delegate_to: "{{ hostvars[item].ansible_host }}"
-      with_items: "{{ groups.tag_role_wadk }}"
+      loop: "{{ groups.tag_role_wadk }}"

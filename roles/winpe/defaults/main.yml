@@ -1,20 +1,48 @@
 ---
-win_adk_download_url: https://go.microsoft.com/fwlink/?linkid=873065
-curl_download_url: https://bintray.com/artifact/download/vszakats/generic/curl-7.61.0-win64-mingw.zip
-temp_directory: "{{ ansible_env.TEMP }}"
+win_adk:
+  win_10:
+    download_url: https://go.microsoft.com/fwlink/?linkid=873065
+    product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
+    features: OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
+  win_11:
+    download_url: https://go.microsoft.com/fwlink/?linkid=2165884
+    product_id: '{18CEED58-19CB-FD62-336E-DDA669283A51}'
+    features: OptionId.DeploymentTools
+  win_2022:
+    download_url: https://go.microsoft.com/fwlink/?linkid=2162950
+    product_id: '{5C5629D0-300B-784D-53C3-DB153536D75C}'
+    features: OptionId.DeploymentTools
+win_adk_winpe_addon:
+  win_11:
+    download_url: https://go.microsoft.com/fwlink/?linkid=2166133
+    product_id: '{B4C84637-4603-F790-9CBD-B38E9B9A7851}'
+    features: OptionId.WindowsPreinstallationEnvironment
+  win_2022:
+    download_url: https://go.microsoft.com/fwlink/?linkid=2163233
+    product_id: '{B4C84637-4603-F790-9CBD-B38E9B9A7851}'
+    features: OptionId.WindowsPreinstallationEnvironment
+curl_version: '7.78.0_6'
+curl_directory: curl-7.78.0-win64-mingw
+curl_download_url: https://curl.se/windows/dl-{{ curl_version }}/curl-{{ curl_version }}-win64-mingw.zip
+temp_directory: '{{ ansible_env.TEMP }}'
 smb_share: ''
 destination_file_location: ''
+drivers_url: ''
 
 drivers:
   - name: apple_usb_ethernet
-    url: http://kom.aau.dk/~pmr/www/stuff/AsixSetup64.zip
+    url: '{{ drivers_url }}/AsixSetup64.exe'
     enable: yes
 
 unzip_executable: c:\Progra~1\7-Zip\7z.exe
 
 winpe_name: winpe_amd64
+cobbler_host: "{{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}"
 cobbler_port: 8080
 enable_script_debug: no
 enable_powershell_modules: no
 enable_autostart: yes
 load_drivers: yes
+
+smb_share_username: "{{ lookup('env', 'SMB_SHARE_USERNAME') }}"
+smb_share_password: "{{ lookup('env', 'SMB_SHARE_PASSWORD') }}"

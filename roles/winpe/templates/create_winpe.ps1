@@ -15,8 +15,10 @@ Dism /Add-Package /Image:"C:\{{ winpe_name }}\mount" /PackagePath:"c:\ADK\Assess
 Dism /Add-Package /Image:"C:\{{ winpe_name }}\mount" /PackagePath:"c:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\WinPE_OCs\en-us\WinPE-DismCmdlets_en-us.cab"
 {% endif %}
 
+{% if enable_autostart %}
 Copy-Item "{{ temp_directory }}\\winpeshl.ini" -Destination "C:\{{ winpe_name }}\mount\Windows\system32"
-Copy-Item "{{ temp_directory }}\\curl-7.61.0-win64-mingw\\bin\*" -Destination "C:\{{ winpe_name }}\mount\Windows\system32"
+{% endif %}
+Copy-Item "{{ temp_directory }}\\{{ curl_directory }}\\bin\*" -Destination "C:\{{ winpe_name }}\mount\Windows\system32"
 
 md "C:\{{ winpe_name }}\mount\opt\bootstrap" -ea 0
 
@@ -36,4 +38,11 @@ Move-Item -Path "{{ temp_directory }}\\{{ driver.name }}" -Destination "C:\\{{ w
 {% endfor %}
 {% endif %}
 
+# Optimize
+Dism /Cleanup-Image /Image="C:\{{ winpe_name }}\mount" /StartComponentCleanup /ResetBase
+
 Dism /Unmount-Image /MountDir:C:\{{ winpe_name }}\mount /Commit
+
+Dism /Export-Image /SourceImageFile:"c:\{{ winpe_name }}\media\sources\boot.wim" /SourceIndex:1 /DestinationImageFile:"c:\{{ winpe_name }}\mount\boot2.wim"
+Del "C:\{{ winpe_name }}\media\sources\boot.wim"
+Move-Item "C:\{{ winpe_name }}\mount\boot2.wim" "c:\{{ winpe_name }}\media\sources\boot.wim"

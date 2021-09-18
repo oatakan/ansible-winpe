@@ -1,0 +1,7 @@
+- hosts: localhost
+  gather_facts: no
+  become: no
+  vars_files:
+    - node-config/node-kubevirt.yml
+  roles:
+    - ansible-role-kubevirt

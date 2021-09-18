@@ -1,19 +1,27 @@
 - name: generate_winpe
-  hosts: tag_role_wadk:&tag_app_winpe
+  hosts: '*_role_wadk'
   become_method: runas
   become: no
-  vars:
-    ansible_port: 5986
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
-    ansible_winrm_server_cert_validation: ignore
 
   pre_tasks:
-    - name: add pcsx module
-      win_psmodule:
-        name: Pscx
-        state: present
-        allow_clobber: yes
+    - block:
+        - name: add pcsx module
+          win_psmodule:
+            name: Pscx
+            state: present
+            allow_clobber: yes
+      rescue:
+        - name: add pcsx module (retry with allow_clobber disabled)
+          win_psmodule:
+            name: Pscx
+            state: present
+          ignore_errors: yes
+
+        - name: add pcsx module (retry with allow_clobber re-enabled)
+          win_psmodule:
+            name: Pscx
+            state: present
+            allow_clobber: yes
 
     - name: install 7-zip
       win_chocolatey:

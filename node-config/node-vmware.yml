@@ -7,27 +7,22 @@ providers:
 
 nodes:
   - name: win10waik
+    role: wadk
+    app_name: winpe
+    environment: dev
     networks:
     - name: mgmt
-      ip: 192.168.1.58
-      netmask: 255.255.255.0
-      gateway: 192.168.1.254
-      domain: home.ad
-      dns_servers:
-      - 192.168.1.254
-      - 8.8.4.4
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: windows-10-1809
-    snapshot_src: Linked
-    linked_clone: True
+    template: "{{ infra_template_name | default('windows-2022-standard-core') }}"
     customization:
       autologon: True
+      autologoncount: 2
       orgname: Ansible
       fullname: Ansible
       timezone: 20
-      password: '{{ ansible_password | default(ansible_ssh_password) }}'
+      password: '{{ ansible_password }}'
       runonce:
       - powershell.exe -command "Set-NetConnectionProfile -NetworkCategory Private"
       - powershell.exe -command "& $([scriptblock]::Create((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))) -ForceNewSSLCert -EnableCredSSP"

@@ -1,0 +1,14 @@
+---
+
+- name: install windows adk
+  win_package:
+    path: '{{ win_adk_download_url }}'
+    product_id: '{{ win_adk_product_id }}'
+    arguments: /quiet /installpath c:\ADK /norestart /ceip off /features {{ win_adk_features }}
+
+- name: install winpe addon
+  win_package:
+    path: '{{ win_adk_winpe_addon_download_url }}'
+    product_id: '{{ win_adk_winpe_addon_product_id }}'
+    arguments: /quiet /installpath c:\ADK /norestart /ceip off /features {{ win_adk_winpe_addon_features }}
+  when: os_level in ['11', '2022']

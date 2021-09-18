@@ -2,7 +2,7 @@
 
 SETLOCAL EnableDelayedExpansion
 
-set COBBLER_SERV={{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}
+set COBBLER_SERV={{ cobbler_host }}
 set COBBLER_PORT={{ cobbler_port }}
 
 
