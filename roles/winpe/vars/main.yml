@@ -2,7 +2,7 @@
 
 os_level: "{{ (ansible_distribution | regex_findall('^.* ([0-9]{1,4}|[0-9]{1}[.]?[0-9]{1}) .*'))[0] | replace('.','_') }}"
 
-os_product_type: "{{ ansible_os_product_type | default('desktop') }}"
+os_product_type: "{{ ansible_os_product_type | default('workstation') }}"
 
 win_adk_iso_path: '{{ temp_directory }}\adk.iso'
 win_adk_download_url: '{{ win_adk["win_" + os_level].download_url | default(win_adk["win_10"].download_url) }}'
