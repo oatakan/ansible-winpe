@@ -12,4 +12,4 @@ nodes:
     memory: 6144
     cpu: 2
     user_name: vagrant
-    template: "{{ infra_template_name | default('windows-11-build-22449-1000') }}"
+    template: "{{ infra_template_name | default('windows-11-23h2-efi') }}"

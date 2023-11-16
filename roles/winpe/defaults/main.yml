@@ -5,7 +5,7 @@ win_adk:
     product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
     features: OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
   win_11:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2165884
+    download_url: https://go.microsoft.com/fwlink/?linkid=2243390
     product_id: '{18CEED58-19CB-FD62-336E-DDA669283A51}'
     features: OptionId.DeploymentTools
   win_2022:
@@ -14,7 +14,7 @@ win_adk:
     features: OptionId.DeploymentTools
 win_adk_winpe_addon:
   win_11:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2166133
+    download_url: https://go.microsoft.com/fwlink/?linkid=2243391
     product_id: '{B4C84637-4603-F790-9CBD-B38E9B9A7851}'
     features: OptionId.WindowsPreinstallationEnvironment
   win_2022:
