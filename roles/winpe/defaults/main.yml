@@ -21,8 +21,8 @@ win_adk_winpe_addon:
     download_url: https://go.microsoft.com/fwlink/?linkid=2163233
     product_id: '{B4C84637-4603-F790-9CBD-B38E9B9A7851}'
     features: OptionId.WindowsPreinstallationEnvironment
-curl_version: '7.78.0_6'
-curl_directory: curl-7.78.0-win64-mingw
+curl_version: '8.4.0_6'
+curl_directory: curl-{{ curl_version }}-win64-mingw
 curl_download_url: https://curl.se/windows/dl-{{ curl_version }}/curl-{{ curl_version }}-win64-mingw.zip
 temp_directory: '{{ ansible_env.TEMP }}'
 smb_share: ''
