@@ -70,9 +70,10 @@ winpe_drivers:
 
 winpe_unzip_executable: c:\Progra~1\7-Zip\7z.exe
 
-winpe_name: winpe_{{ winpe_arch }}
 winpe_cobbler_host: "{{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}"
 winpe_cobbler_port: 8080
+
+winpe_name: winpe_{{ winpe_cobbler_host }}_{{ winpe_arch }}
 
 winpe_enable_script_debug: false
 winpe_enable_powershell_modules: false
