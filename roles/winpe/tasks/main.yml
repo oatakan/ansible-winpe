@@ -71,10 +71,6 @@
   ansible.windows.win_shell: '{{ winpe_temp_directory }}\create_winpe.ps1'
   register: copy_files_and_modules
 
-- name: show results of copy files and modules
-  ansible.builtin.debug:
-    msg: "{{ copy_files_and_modules.stdout }}"
-
 - name: create winpe iso file
   ansible.windows.win_shell: >
     "..\Deployment Tools\DandISetEnv.bat" &

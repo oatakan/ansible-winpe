@@ -58,7 +58,10 @@ winpe_smb_share: ''
 winpe_destination_file_location: ''
 winpe_drivers_url: ''
 
-winpe_arch: "{{ ansible_architecture2 | default('amd64') }}"
+winpe_architectures:
+  x86_64: amd64
+  aarch64: arm64
+  arm64: arm64
 
 winpe_drivers:
   - name: apple_usb_ethernet

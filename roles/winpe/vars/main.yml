@@ -15,3 +15,5 @@ winpe_win_adk_winpe_addon_features: '{{ winpe_win_adk_winpe_addon["win_" + winpe
 
 winpe_smb_share_username: "{{ lookup('env', 'SMB_SHARE_USERNAME') }}"
 winpe_smb_share_password: "{{ lookup('env', 'SMB_SHARE_PASSWORD') }}"
+
+winpe_arch: "{{ winpe_architectures[ansible_architecture2] | default('amd64') }}"
