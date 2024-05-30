@@ -1,108 +1,128 @@
 ---
-- debug:
-    msg: "{{ os_level }}"
+
+- name: run pre-flight tasks
+  ansible.builtin.include_tasks: pre_flight.yml
+
+- name: show os level
+  ansible.builtin.debug:
+    msg: "{{ winpe_os_level }}"
 
 - name: set winpe_name
-  set_fact:
+  ansible.builtin.set_fact:
     winpe_name: '{{ winpe_name }}_ps'
-  when: enable_powershell_modules
+  when: winpe_enable_powershell_modules | bool
 
 - name: set winpe_name with debug
-  set_fact:
+  ansible.builtin.set_fact:
     winpe_name: '{{ winpe_name }}_debug'
-  when: enable_script_debug
+  when: winpe_enable_script_debug | bool
 
-- name: install adk
-  include_tasks: "{{ os_product_type }}.yml"
+- name: install adk and winpe addon
+  ansible.builtin.include_tasks: install.yml
 
 - name: copy winpeshl.ini file
-  win_copy:
+  ansible.windows.win_copy:
     src: winpeshl.ini
-    dest: '{{ temp_directory }}\winpeshl.ini'
-  when: enable_autostart|bool
+    dest: '{{ winpe_temp_directory }}\winpeshl.ini'
+  when: winpe_enable_autostart | bool
 
 - name: create files
-  win_template:
+  ansible.windows.win_template:
     src: '{{ item }}'
-    dest: '{{ temp_directory }}\{{ item }}'
+    dest: '{{ winpe_temp_directory }}\{{ item }}'
   loop:
     - init.cmd
     - setsysname.cmd
 
 - name: download curl
-  win_get_url:
-    url: '{{ curl_download_url }}'
-    dest: '{{ temp_directory }}\curl.zip'
+  ansible.windows.win_get_url:
+    url: '{{ winpe_curl_download_url }}'
+    dest: '{{ winpe_temp_directory }}\curl.zip'
 
 - name: unzip curl
-  win_unzip:
-    src: '{{ temp_directory }}\curl.zip'
-    dest: '{{ temp_directory }}'
-    creates: '{{ temp_directory }}\{{ curl_directory }}'
+  community.windows.win_unzip:
+    src: '{{ winpe_temp_directory }}\curl.zip'
+    dest: '{{ winpe_temp_directory }}'
+    creates: '{{ winpe_temp_directory }}\{{ winpe_curl_directory }}'
 
 - name: load drivers
-  include_tasks: drivers.yml
-  when: load_drivers|bool
+  ansible.builtin.include_tasks: drivers.yml
+  when: winpe_load_drivers | bool
+
+- name: change wallpaper
+  ansible.builtin.include_tasks: wallpaper.yml
+  when: winpe_replace_wallpaper | bool
 
 - name: create a working copy of the windows pe files
-  win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & copype amd64 C:\{{ winpe_name }}'
+  ansible.windows.win_shell: >
+    "..\Deployment Tools\DandISetEnv.bat"
+    & copype {{ winpe_arch }} C:\{{ winpe_name }}
   args:
     executable: cmd
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
     creates: C:\{{ winpe_name }}
 
 - name: copy script file
-  win_template:
+  ansible.windows.win_template:
     src: create_winpe.ps1
-    dest: '{{ temp_directory }}\create_winpe.ps1'
+    dest: '{{ winpe_temp_directory }}\create_winpe.ps1'
 
 - name: copy files and modules into winpe
-  win_shell: '{{ temp_directory }}\create_winpe.ps1'
+  ansible.windows.win_shell: '{{ winpe_temp_directory }}\create_winpe.ps1'
+  register: copy_files_and_modules
+
+- name: show results of copy files and modules
+  ansible.builtin.debug:
+    msg: "{{ copy_files_and_modules.stdout }}"
 
 - name: create winpe iso file
-  win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & MakeWinPEMedia /ISO C:\{{ winpe_name }} {{ temp_directory }}\{{ winpe_name }}.iso'
+  ansible.windows.win_shell: >
+    "..\Deployment Tools\DandISetEnv.bat" &
+    MakeWinPEMedia /ISO C:\{{ winpe_name }} {{ winpe_temp_directory }}\{{ winpe_name }}.iso
   args:
     executable: cmd
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
 
 - name: copy winpe iso file
-  win_copy:
-    src: '{{ temp_directory }}\{{ winpe_name }}.iso'
-    dest: '{{ smb_share }}\{{ destination_file_location }}\'
-    remote_src: yes
-  become: yes
-  become_method: runas
+  ansible.windows.win_copy:
+    src: '{{ winpe_temp_directory }}\{{ winpe_name }}.iso'
+    dest: '{{ winpe_smb_share }}\{{ winpe_destination_file_location }}\'
+    remote_src: true
+  become: true
+  become_method: ansible.builtin.runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   vars:
-    ansible_become_user: '{{ smb_share_username }}'
-    ansible_become_pass: '{{ smb_share_password }}'
+    ansible_become_user: '{{ winpe_smb_share_username }}'
+    ansible_become_pass: '{{ winpe_smb_share_password }}'
 
 - name: remove boot prompt
-  win_file:
+  ansible.windows.win_file:
     path: C:\{{ winpe_name }}\media\Boot\Bootfix.bin
     state: absent
 
 - name: create winpe no prompt iso file
-  win_shell: '"..\\Deployment Tools\\DandISetEnv.bat" & MakeWinPEMedia /ISO C:\{{ winpe_name }} {{ temp_directory }}\{{ winpe_name }}_no_prompt.iso'
+  ansible.windows.win_shell: >
+    "..\Deployment Tools\DandISetEnv.bat" &
+    MakeWinPEMedia /ISO C:\{{ winpe_name }} {{ winpe_temp_directory }}\{{ winpe_name }}_no_prompt.iso
   args:
     executable: cmd
     chdir: C:\ADK\Assessment and Deployment Kit\Windows Preinstallation Environment
 
 - name: copy winpe no prompt iso file
-  win_copy:
-    src: '{{ temp_directory }}\{{ winpe_name }}_no_prompt.iso'
-    dest: '{{ smb_share }}\{{ destination_file_location }}\'
-    remote_src: yes
-  become: yes
-  become_method: runas
+  ansible.windows.win_copy:
+    src: '{{ winpe_temp_directory }}\{{ winpe_name }}_no_prompt.iso'
+    dest: '{{ winpe_smb_share }}\{{ winpe_destination_file_location }}\'
+    remote_src: true
+  become: true
+  become_method: ansible.builtin.runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   vars:
-    ansible_become_user: '{{ smb_share_username }}'
-    ansible_become_pass: '{{ smb_share_password }}'
+    ansible_become_user: '{{ winpe_smb_share_username }}'
+    ansible_become_pass: '{{ winpe_smb_share_password }}'
 
 - name: clean up temp files
-  win_file:
-    path: '{{ temp_directory }}\{{ item }}'
+  ansible.windows.win_file:
+    path: '{{ winpe_temp_directory }}\{{ item }}'
     state: absent
   loop:
     - winpeshl.ini
@@ -110,11 +130,11 @@
     - setsysname.cmd
     - create_winpe.ps1
     - curl.zip
-    - '{{ curl_directory }}'
+    - '{{ winpe_curl_directory }}'
     - '{{ winpe_name }}.iso'
     - '{{ winpe_name }}_no_prompt.iso'
 
 - name: clean winpe files
-  win_file:
+  ansible.windows.win_file:
     path: C:\{{ winpe_name }}
     state: absent

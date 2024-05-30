@@ -1,0 +1,17 @@
+---
+
+- name: check adk iso file if a path is specified
+  ansible.windows.win_stat:
+    path: "{{ win_adk_iso_path }}"
+  register: adk_iso_file
+  when:
+    - win_adk_iso_path is defined
+    - win_adk_iso_path | length
+
+- name: check winpe addon iso file if a path is specified
+  ansible.windows.win_stat:
+    path: "{{ win_adk_winpe_addon_iso_path }}"
+  register: winpe_addon_iso_file
+  when:
+    - win_adk_winpe_addon_iso_path is defined
+    - win_adk_winpe_addon_iso_path | length

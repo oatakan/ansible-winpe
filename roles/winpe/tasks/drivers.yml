@@ -1,19 +1,20 @@
 ---
+
 - name: download drivers
-  win_get_url:
+  ansible.windows.win_get_url:
     url: '{{ item.url }}'
-    dest: '{{ temp_directory }}\{{ item.url | urlsplit("path") | basename }}'
-  loop: '{{ drivers }}'
+    dest: '{{ winpe_temp_directory }}\{{ item.url | urlsplit("path") | basename }}'
+  loop: '{{ winpe_drivers }}'
 
 - name: extract drivers
-  win_unzip:
-    src: '{{ temp_directory }}\{{ item.url | urlsplit("path") | basename }}'
-    dest: '{{ temp_directory }}\{{ item.name }}'
+  community.windows.win_unzip:
+    src: '{{ winpe_temp_directory }}\{{ item.url | urlsplit("path") | basename }}'
+    dest: '{{ winpe_temp_directory }}\{{ item.name }}'
   when: item.enable
-  loop: '{{ drivers }}'
+  loop: '{{ winpe_drivers }}'
 
 - name: clean up driver files
-  win_file:
-    path: '{{ temp_directory }}\{{ item.url | urlsplit("path") | basename }}'
+  ansible.windows.win_file:
+    path: '{{ winpe_temp_directory }}\{{ item.url | urlsplit("path") | basename }}'
     state: absent
-  loop: '{{ drivers }}'
+  loop: '{{ winpe_drivers }}'

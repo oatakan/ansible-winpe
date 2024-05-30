@@ -1,8 +1,10 @@
+---
+
 - name: Remove Windows Servers
   hosts: all
-  gather_facts: False
+  gather_facts: false
   connection: local
-  become: no
+  become: false
   vars_files:
     - node-config/node-kubevirt.yml
 
@@ -10,4 +12,4 @@
     - role: ansible-role-kubevirt
       role_action: deprovision
       delegate_to: localhost
-      run_once: yes
+      run_once: true

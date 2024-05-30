@@ -1,6 +1,9 @@
-- hosts: localhost
-  gather_facts: no
-  become: no
+---
+
+- name: provision host on kubevirt
+  hosts: localhost
+  gather_facts: false
+  become: false
   vars_files:
     - node-config/node-kubevirt.yml
   roles:

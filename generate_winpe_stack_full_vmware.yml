@@ -1,4 +1,7 @@
 ---
-- import_playbook: provision_infra_vmware.yml
 
-- import_playbook: generate_winpe.yml
+- name: provision infra on vmware
+  ansible.builtin.import_playbook: provision_infra_vmware.yml
+
+- name: generate winpe
+  ansible.builtin.import_playbook: generate_winpe.yml

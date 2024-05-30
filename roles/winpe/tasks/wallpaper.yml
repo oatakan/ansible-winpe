@@ -1,0 +1,6 @@
+---
+
+- name: copy wallpaper
+  ansible.windows.win_copy:
+    src: win_serene_wallpaper.jpg
+    dest: '{{ winpe_temp_directory }}\winpe.jpg'

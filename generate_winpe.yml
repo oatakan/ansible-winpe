@@ -1,30 +1,36 @@
+---
+
 - name: generate_winpe
   hosts: '*_role_wadk'
-  become_method: runas
-  become: no
+  become_method: ansible.builtin.runas
+  become: false
+  vars:
+    winpe_smb_share_username: "{{ lookup('env', 'SMB_SHARE_USERNAME') | default(smb_share_username) }}"
+    winpe_smb_share_password: "{{ lookup('env', 'SMB_SHARE_PASSWORD') | default(smb_share_password) }}"
 
   pre_tasks:
-    - block:
+    - name: add pcsx module
+      block:
         - name: add pcsx module
-          win_psmodule:
+          community.windows.win_psmodule:
             name: Pscx
             state: present
-            allow_clobber: yes
+            allow_clobber: true
       rescue:
         - name: add pcsx module (retry with allow_clobber disabled)
-          win_psmodule:
+          community.windows.win_psmodule:
             name: Pscx
             state: present
-          ignore_errors: yes
+          failed_when: false
 
         - name: add pcsx module (retry with allow_clobber re-enabled)
-          win_psmodule:
+          community.windows.win_psmodule:
             name: Pscx
             state: present
-            allow_clobber: yes
+            allow_clobber: true
 
     - name: install 7-zip
-      win_chocolatey:
+      chocolatey.chocolatey.win_chocolatey:
         name: 7zip.install
         state: present
 

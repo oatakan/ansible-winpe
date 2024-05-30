@@ -1,48 +1,82 @@
 ---
-win_adk:
+
+winpe_win_adk:
   win_10:
-    download_url: https://go.microsoft.com/fwlink/?linkid=873065
-    product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
-    features: OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
+    download_url: https://go.microsoft.com/fwlink/?linkid=2271337
+    product_id: '{B30B4A08-0946-44E6-C5AC-6C2563D08195}'
+    features: OptionId.DeploymentTools
   win_11:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2243390
-    product_id: '{18CEED58-19CB-FD62-336E-DDA669283A51}'
+    download_url: https://go.microsoft.com/fwlink/?linkid=2271337
+    product_id: '{B30B4A08-0946-44E6-C5AC-6C2563D08195}'
     features: OptionId.DeploymentTools
   win_2022:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2162950
-    product_id: '{5C5629D0-300B-784D-53C3-DB153536D75C}'
+    download_url: https://go.microsoft.com/fwlink/?linkid=2271337
+    product_id: '{B30B4A08-0946-44E6-C5AC-6C2563D08195}'
     features: OptionId.DeploymentTools
-win_adk_winpe_addon:
+winpe_win_adk_winpe_addon:
+  win_10:
+    download_url: https://go.microsoft.com/fwlink/?linkid=2271338
+    product_id: '{C6CB0DF0-B1BD-3CF0-4056-3D63832B3AD6}'
+    features: OptionId.WindowsPreinstallationEnvironment
   win_11:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2243391
-    product_id: '{B4C84637-4603-F790-9CBD-B38E9B9A7851}'
+    download_url: https://go.microsoft.com/fwlink/?linkid=2271338
+    product_id: '{C6CB0DF0-B1BD-3CF0-4056-3D63832B3AD6}'
     features: OptionId.WindowsPreinstallationEnvironment
   win_2022:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2163233
-    product_id: '{B4C84637-4603-F790-9CBD-B38E9B9A7851}'
+    download_url: https://go.microsoft.com/fwlink/?linkid=2271338
+    product_id: '{C6CB0DF0-B1BD-3CF0-4056-3D63832B3AD6}'
     features: OptionId.WindowsPreinstallationEnvironment
-curl_version: '8.4.0_6'
-curl_directory: curl-{{ curl_version }}-win64-mingw
-curl_download_url: https://curl.se/windows/dl-{{ curl_version }}/curl-{{ curl_version }}-win64-mingw.zip
-temp_directory: '{{ ansible_env.TEMP }}'
-smb_share: ''
-destination_file_location: ''
-drivers_url: ''
 
-drivers:
+# winpe_win_adk:
+#   win_10:
+#     download_url: https://go.microsoft.com/fwlink/?linkid=873065
+#     product_id: '{C4443D4E-AC00-CF0E-9519-C9111E83ADBB}'
+#     features: OptionId.DeploymentTools OptionId.WindowsPreinstallationEnvironment
+#   win_11:
+#     download_url: https://go.microsoft.com/fwlink/?linkid=2243390
+#     product_id: '{18CEED58-19CB-FD62-336E-DDA669283A51}'
+#     features: OptionId.DeploymentTools
+#   win_2022:
+#     download_url: https://go.microsoft.com/fwlink/?linkid=2162950
+#     product_id: '{5C5629D0-300B-784D-53C3-DB153536D75C}'
+#     features: OptionId.DeploymentTools
+# win_adk_winpe_addon:
+#   win_11:
+#     download_url: https://go.microsoft.com/fwlink/?linkid=2243391
+#     product_id: '{B4C84637-4603-F790-9CBD-B38E9B9A7851}'
+#     features: OptionId.WindowsPreinstallationEnvironment
+#   win_2022:
+#     download_url: https://go.microsoft.com/fwlink/?linkid=2163233
+#     product_id: '{B4C84637-4603-F790-9CBD-B38E9B9A7851}'
+#     features: OptionId.WindowsPreinstallationEnvironment
+
+winpe_curl_version: '8.4.0_6'
+winpe_curl_directory: curl-{{ winpe_curl_version }}-win64-mingw
+winpe_curl_download_url: https://curl.se/windows/dl-{{ winpe_curl_version }}/curl-{{ winpe_curl_version }}-win64-mingw.zip
+winpe_temp_directory: '{{ ansible_env.TEMP }}'
+winpe_smb_share: ''
+winpe_destination_file_location: ''
+winpe_drivers_url: ''
+
+winpe_arch: "{{ ansible_architecture2 | default('amd64') }}"
+
+winpe_drivers:
   - name: apple_usb_ethernet
-    url: '{{ drivers_url }}/AsixSetup64.exe'
-    enable: yes
+    url: '{{ winpe_drivers_url }}/AsixSetup64.exe'
+    enable: true
 
-unzip_executable: c:\Progra~1\7-Zip\7z.exe
+winpe_unzip_executable: c:\Progra~1\7-Zip\7z.exe
 
-winpe_name: winpe_amd64
-cobbler_host: "{{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}"
-cobbler_port: 8080
-enable_script_debug: no
-enable_powershell_modules: no
-enable_autostart: yes
-load_drivers: yes
+winpe_name: winpe_{{ winpe_arch }}
+winpe_cobbler_host: "{{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}"
+winpe_cobbler_port: 8080
 
-smb_share_username: "{{ lookup('env', 'SMB_SHARE_USERNAME') }}"
-smb_share_password: "{{ lookup('env', 'SMB_SHARE_PASSWORD') }}"
+winpe_enable_script_debug: false
+winpe_enable_powershell_modules: false
+winpe_enable_autostart: true
+winpe_load_drivers: true
+
+winpe_replace_wallpaper: false
+
+# win_adk_iso_path: '{{ winpe_temp_directory }}\adk.iso'
+# win_adk_winpe_addon_iso_path: '{{ winpe_temp_directory }}\adkwinpe.iso'

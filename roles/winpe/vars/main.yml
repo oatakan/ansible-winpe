@@ -1,15 +1,17 @@
 ---
 
-os_level: "{{ (ansible_distribution | regex_findall('^.* ([0-9]{1,4}|[0-9]{1}[.]?[0-9]{1}) .*'))[0] | replace('.','_') }}"
+winpe_os_level: "{{ (ansible_distribution | regex_findall('^.* ([0-9]{1,4}|[0-9]{1}[.]?[0-9]{1}) .*'))[0] | replace('.', '_') }}"
 
-os_product_type: "{{ ansible_os_product_type | default('workstation') }}"
+winpe_os_product_type: "{{ ansible_os_product_type | default('workstation') }}"
 
-win_adk_iso_path: '{{ temp_directory }}\adk.iso'
-win_adk_download_url: '{{ win_adk["win_" + os_level].download_url | default(win_adk["win_10"].download_url) }}'
-win_adk_product_id: '{{ win_adk["win_" + os_level].product_id | default(win_adk["win_10"].product_id) }}'
-win_adk_features: '{{ win_adk["win_" + os_level].features | default(win_adk["win_10"].features) }}'
+winpe_win_adk_download_url: '{{ winpe_win_adk["win_" + winpe_os_level].download_url | default(win_adk["win_10"].download_url) }}'
+winpe_win_adk_product_id: '{{ winpe_win_adk["win_" + winpe_os_level].product_id | default(win_adk["win_10"].product_id) }}'
+winpe_win_adk_features: '{{ winpe_win_adk["win_" + winpe_os_level].features | default(win_adk["win_10"].features) }}'
 
-win_adk_winpe_addon_iso_path: '{{ temp_directory }}\adkwinpe.iso'
-win_adk_winpe_addon_download_url: '{{ win_adk_winpe_addon["win_" + os_level].download_url | default(win_adk_winpe_addon["win_10"].download_url) }}'
-win_adk_winpe_addon_product_id: '{{ win_adk_winpe_addon["win_" + os_level].product_id | default(win_adk_winpe_addon["win_10"].product_id) }}'
-win_adk_winpe_addon_features: '{{ win_adk_winpe_addon["win_" + os_level].features | default(win_adk_winpe_addon["win_10"].features) }}'
+winpe_win_adk_winpe_addon_download_url: |
+  {{ winpe_win_adk_winpe_addon["win_" + winpe_os_level].download_url | default(win_adk_winpe_addon["win_10"].download_url) }}
+winpe_win_adk_winpe_addon_product_id: '{{ winpe_win_adk_winpe_addon["win_" + winpe_os_level].product_id | default(win_adk_winpe_addon["win_10"].product_id) }}'
+winpe_win_adk_winpe_addon_features: '{{ winpe_win_adk_winpe_addon["win_" + winpe_os_level].features | default(win_adk_winpe_addon["win_10"].features) }}'
+
+winpe_smb_share_username: "{{ lookup('env', 'SMB_SHARE_USERNAME') }}"
+winpe_smb_share_password: "{{ lookup('env', 'SMB_SHARE_PASSWORD') }}"

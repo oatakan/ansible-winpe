@@ -1,6 +1,9 @@
-- hosts: localhost
-  gather_facts: no
-  become: no
+---
+
+- name: provision hosts on vmware
+  hosts: localhost
+  gather_facts: false
+  become: false
   vars_files:
     - node-config/node-vmware.yml
   roles:
@@ -8,19 +11,19 @@
 
   post_tasks:
     - name: add hosts to winpe group
-      add_host:
+      ansible.builtin.add_host:
         name: "{{ item.item.name }}"
         ansible_host: "{{ item.item.networks[0].ip | default(item.instance.guest.ipAddress) }}"
         ansible_port: "{{ item.item.ansible_port | default(ansible_port) | default('5986') }}"
         groups: tag_role_wadk,tag_app_winpe
       loop: "{{ guest_ip_address.results }}"
-      when: ('win10waik' in item.invocation.module_args.name)
-      changed_when: no
+      when: ('winwaik' in item.invocation.module_args.name)
+      changed_when: false
       tags:
         - addhost
 
     - name: wait for systems to be available
-      wait_for_connection:
+      ansible.builtin.wait_for_connection:
         delay: 10
         timeout: 300
       vars:
