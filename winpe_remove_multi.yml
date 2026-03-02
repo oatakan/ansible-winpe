@@ -1,0 +1,18 @@
+---
+- name: WinPE Host Infra Multi Deprovision
+  hosts: all
+  gather_facts: false
+  connection: local
+  become: false
+  vars:
+    provider: vmware
+    provider_role: "{{ provider }}"
+    node_file_suffix: ""
+  vars_files:
+    - node-config/node-{{ provider }}{{ '-' + node_file_suffix if (node_file_suffix | length) else '' }}.yml
+
+  roles:
+    - role: ansible-role-{{ provider_role | default(provider) }}
+      role_action: deprovision
+      delegate_to: localhost
+      run_once: true

@@ -24,7 +24,12 @@ Copy-Item "{{ winpe_temp_directory }}\{{ winpe_curl_directory }}\bin\*" -Destina
 md "$mountDir\opt\bootstrap" -ea 0
 
 Copy-Item "{{ winpe_temp_directory }}\init.cmd" -Destination "$mountDir\opt\bootstrap"
+{% if winpe_provisioning_server_type | default('foreman') == 'cobbler' %}
 Copy-Item "{{ winpe_temp_directory }}\setsysname.cmd" -Destination "$mountDir\opt\bootstrap"
+{% endif %}
+{% if winpe_provisioning_server_type | default('foreman') == 'foreman' %}
+Copy-Item "{{ winpe_temp_directory }}\setsysname_foreman.cmd" -Destination "$mountDir\opt\bootstrap"
+{% endif %}
 
 #Copy-Item C:\Windows\System32\timeout.exe -Destination "$mountDir\Windows\system32"
 

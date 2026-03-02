@@ -4,6 +4,9 @@
   ansible.builtin.include_tasks: install_adk_from_iso.yml
   when: (adk_iso_file.stat.exists | default(false)) or win_adk_iso_download_url is defined
 
+- debug:
+    msg: "winpe_win_adk_download_url: {{ winpe_win_adk_download_url }}, winpe_win_adk_product_id: {{ winpe_win_adk_product_id }}"
+
 - name: install windows adk from url
   ansible.windows.win_package:
     path: '{{ winpe_win_adk_download_url }}'
@@ -18,6 +21,9 @@
 - name: install winpe addon from iso
   ansible.builtin.include_tasks: install_winpe_addon_from_iso.yml
   when: (winpe_addon_iso_file.stat.exists | default(false)) or win_adk_winpe_addon_iso_download_url is defined
+
+- debug:
+    msg: "winpe_win_adk_winpe_addon_download_url: {{ winpe_win_adk_winpe_addon_download_url }}, winpe_win_adk_winpe_addon_product_id: {{ winpe_win_adk_winpe_addon_product_id }}"
 
 - name: install winpe addon from url
   ansible.windows.win_package:

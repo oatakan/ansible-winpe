@@ -1,14 +1,17 @@
 ---
-
-- name: provision hosts on vmware
+- name: WinPE Host Infra Multi Provision
   hosts: localhost
-  gather_facts: false
   become: false
+  vars:
+    provider: vmware  # vmware or kubevirt
+    provider_role: "{{ provider }}"
+    node_file_suffix: ""
   vars_files:
-    - node-config/node-vmware.yml
-  roles:
-    - ansible-role-vmware
+    - node-config/node-{{ provider }}{{ '-' + node_file_suffix if (node_file_suffix | length) else '' }}.yml
 
+  roles:
+    - ansible-role-{{ provider_role | default(provider) }}
+  
   post_tasks:
     - name: add hosts to winpe group
       ansible.builtin.add_host:
@@ -33,3 +36,4 @@
         ansible_winrm_server_cert_validation: ignore
       delegate_to: "{{ hostvars[item].ansible_host }}"
       loop: "{{ groups.tag_role_wadk }}"
+

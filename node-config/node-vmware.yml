@@ -16,7 +16,7 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: "{{ infra_template_name | default('windows-2022-standard-core') }}"
+    template: "{{ infra_template_name | default('windows-2025-standard-core') }}"
     customization:
       autologon: true
       autologoncount: 2

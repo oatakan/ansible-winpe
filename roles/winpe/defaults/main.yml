@@ -6,12 +6,16 @@ winpe_win_adk:
     product_id: '{B30B4A08-0946-44E6-C5AC-6C2563D08195}'
     features: OptionId.DeploymentTools
   win_11:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2271337
-    product_id: '{B30B4A08-0946-44E6-C5AC-6C2563D08195}'
+    download_url: https://go.microsoft.com/fwlink/?linkid=2243390
+    product_id: '{073af81c-64f5-43a2-9e4b-1d222c6b8434}'
     features: OptionId.DeploymentTools
   win_2022:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2271337
-    product_id: '{B30B4A08-0946-44E6-C5AC-6C2563D08195}'
+    download_url: https://go.microsoft.com/fwlink/?linkid=2243390
+    product_id: '{073af81c-64f5-43a2-9e4b-1d222c6b8434}'
+    features: OptionId.DeploymentTools
+  win_2025:
+    download_url: https://go.microsoft.com/fwlink/?linkid=2243390
+    product_id: '{073af81c-64f5-43a2-9e4b-1d222c6b8434}'
     features: OptionId.DeploymentTools
 winpe_win_adk_winpe_addon:
   win_10:
@@ -19,12 +23,16 @@ winpe_win_adk_winpe_addon:
     product_id: '{C6CB0DF0-B1BD-3CF0-4056-3D63832B3AD6}'
     features: OptionId.WindowsPreinstallationEnvironment
   win_11:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2271338
-    product_id: '{C6CB0DF0-B1BD-3CF0-4056-3D63832B3AD6}'
+    download_url: https://go.microsoft.com/fwlink/?linkid=2243391
+    product_id: '{044e8162-49cb-4709-9876-beb7c679c8e8}'
     features: OptionId.WindowsPreinstallationEnvironment
   win_2022:
-    download_url: https://go.microsoft.com/fwlink/?linkid=2271338
-    product_id: '{C6CB0DF0-B1BD-3CF0-4056-3D63832B3AD6}'
+    download_url: https://go.microsoft.com/fwlink/?linkid=2243391
+    product_id: '{044e8162-49cb-4709-9876-beb7c679c8e8}'
+    features: OptionId.WindowsPreinstallationEnvironment
+  win_2025:
+    download_url: https://go.microsoft.com/fwlink/?linkid=2243391
+    product_id: '{044e8162-49cb-4709-9876-beb7c679c8e8}'
     features: OptionId.WindowsPreinstallationEnvironment
 
 # winpe_win_adk:
@@ -50,7 +58,7 @@ winpe_win_adk_winpe_addon:
 #     product_id: '{B4C84637-4603-F790-9CBD-B38E9B9A7851}'
 #     features: OptionId.WindowsPreinstallationEnvironment
 
-winpe_curl_version: '8.4.0_6'
+winpe_curl_version: '8.18.0_4'
 winpe_curl_directory: curl-{{ winpe_curl_version }}-win64-mingw
 winpe_curl_download_url: https://curl.se/windows/dl-{{ winpe_curl_version }}/curl-{{ winpe_curl_version }}-win64-mingw.zip
 winpe_temp_directory: '{{ ansible_env.TEMP }}'
@@ -72,6 +80,51 @@ winpe_unzip_executable: c:\Progra~1\7-Zip\7z.exe
 
 winpe_cobbler_host: "{{ lookup('env', 'COBBLER_host') | urlsplit('hostname') }}"
 winpe_cobbler_port: 8080
+
+# Provisioning server type: 'cobbler' or 'foreman'
+winpe_provisioning_server_type: foreman
+
+# Foreman-specific settings
+winpe_foreman_host: "{{ lookup('env', 'FOREMAN_HOST') | default('') }}"
+winpe_foreman_port: 443
+winpe_foreman_scheme: https
+winpe_foreman_media_subdir: ''
+# REMOVED: winpe_foreman_smb_media — no longer needed.
+# Previously, the Windows media UNC path (\\host\share\isoname) had to be baked
+# into the WinPE ISO at build time, requiring a new ISO for every new Windows ISO.
+#
+# NEW APPROACH (matches cobbler's dynamic script mechanism):
+#   WinPE init.cmd downloads mountmedia.cmd from Foreman at boot time:
+#     curl https://FOREMAN_HOST/unattended/script
+#   Foreman renders the 'windows-mountmedia.cmd' script template (kind=script)
+#   with the host's context — @host.medium.path (http://host/media/windows/isoname)
+#   is converted to \\host\media\windows\isoname at render time.
+#   This is the exact Foreman equivalent of cobbler's Cheetah-rendered mountmedia.cmd:
+#     curl /cblr/svc/op/script/system/<sysname>/?script=mountmedia.cmd
+#
+# WHAT IS STILL BAKED INTO THE WINPE ISO:
+#   winpe_foreman_host  — the Foreman server IP/hostname (changes only if you rebuild Foreman)
+#   winpe_foreman_port  — default 443
+#   winpe_foreman_scheme — default https
+#
+# The WinPE ISO is now OS-version-agnostic — one ISO per Foreman server handles
+# all Windows versions (2019, 2022, 11, etc.) without rebuilding.
+# When true, WinPE writes SetupComplete.cmd to the target Windows partition so
+# the Foreman built callback fires AFTER full Windows installation (before first
+# logon). setup.exe is invoked with /noreboot so WinPE can write the script
+# before rebooting into Windows setup phase 2+.
+winpe_foreman_setupcomplete_in_winpe: true
+winpe_foreman_built_callback_retries: 10
+winpe_foreman_built_callback_retry_delay_sec: 15
+
+# When true, pass /emsport:COM1 /emsbaudrate:115200 to setup.exe.
+# Disable (false) to avoid the Windows Boot Manager text-mode menu that appears
+# when EMS is enabled (requires manual "Windows Server [EMS Enabled]" selection).
+winpe_foreman_ems_enabled: false
+
+# When true, add 'bcdedit /set {current} bootems no' to SetupComplete.cmd as a
+# safety net in case EMS ended up in BCD (e.g. from a previous install attempt).
+winpe_foreman_disable_ems_in_bcd: true
 
 winpe_name: winpe_{{ winpe_cobbler_host }}_{{ winpe_arch }}
 

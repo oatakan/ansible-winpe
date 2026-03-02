@@ -7,6 +7,12 @@
   ansible.builtin.debug:
     msg: "{{ winpe_os_level }}"
 
+- name: validate provisioning server type
+  ansible.builtin.assert:
+    that:
+      - winpe_provisioning_server_type | default('foreman') in ['foreman', 'cobbler']
+    fail_msg: "winpe_provisioning_server_type must be 'foreman' or 'cobbler'"
+
 - name: set winpe_name
   ansible.builtin.set_fact:
     winpe_name: '{{ winpe_name }}_ps'
@@ -17,6 +23,11 @@
     winpe_name: '{{ winpe_name }}_debug'
   when: winpe_enable_script_debug | bool
 
+- name: set winpe_name for foreman
+  ansible.builtin.set_fact:
+    winpe_name: "winpe_{{ winpe_provisioning_server_type }}_{{ winpe_foreman_host }}_{{ winpe_arch }}"
+  when: winpe_provisioning_server_type | default('foreman') == 'foreman'
+
 - name: install adk and winpe addon
   ansible.builtin.include_tasks: install.yml
 
@@ -26,13 +37,23 @@
     dest: '{{ winpe_temp_directory }}\winpeshl.ini'
   when: winpe_enable_autostart | bool
 
-- name: create files
+- name: create bootstrap scripts (cobbler)
   ansible.windows.win_template:
     src: '{{ item }}'
     dest: '{{ winpe_temp_directory }}\{{ item }}'
   loop:
     - init.cmd
     - setsysname.cmd
+  when: winpe_provisioning_server_type | default('foreman') == 'cobbler'
+
+- name: create bootstrap scripts (foreman)
+  ansible.windows.win_template:
+    src: '{{ item.src }}'
+    dest: '{{ winpe_temp_directory }}\{{ item.dest }}'
+  loop:
+    - { src: init_foreman.cmd, dest: init.cmd }
+    - { src: setsysname_foreman.cmd, dest: setsysname_foreman.cmd }
+  when: winpe_provisioning_server_type | default('foreman') == 'foreman'
 
 - name: download curl
   ansible.windows.win_get_url:
@@ -91,10 +112,18 @@
     ansible_become_user: '{{ winpe_smb_share_username }}'
     ansible_become_pass: '{{ winpe_smb_share_password }}'
 
-- name: remove boot prompt
-  ansible.windows.win_file:
-    path: C:\{{ winpe_name }}\media\Boot\Bootfix.bin
-    state: absent
+- name: remove boot prompts
+  block:
+    - name: remove boot prompt (bios)
+      ansible.windows.win_file:
+        path: C:\{{ winpe_name }}\media\Boot\Bootfix.bin
+        state: absent
+
+    - name: replace efifsys.bin file (uefi)
+      ansible.windows.win_copy:
+        src: C:\ADK\Assessment and Deployment Kit\Deployment Tools\{{ winpe_arch }}\Oscdimg\efisys_noprompt.bin
+        dest: C:\{{ winpe_name }}\fwfiles\efisys.bin
+        remote_src: true
 
 - name: create winpe no prompt iso file
   ansible.windows.win_shell: >
@@ -124,6 +153,7 @@
     - winpeshl.ini
     - init.cmd
     - setsysname.cmd
+    - setsysname_foreman.cmd
     - create_winpe.ps1
     - curl.zip
     - '{{ winpe_curl_directory }}'
